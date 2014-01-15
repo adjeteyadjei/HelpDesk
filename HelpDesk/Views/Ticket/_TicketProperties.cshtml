@@ -1,0 +1,47 @@
+﻿<div class="panel panel-primary">
+    <div class="panel-heading">Ticket Properties</div>
+    <div class="panel-body">
+        <form class="form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-sm-5 control-label">Date Created:</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static">{{newTicket.CreatedAt}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-5 control-label">Created By:</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static">{{newTicket.AssignedBy.Name}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-5 control-label">Assigned To:</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static">{{newTicket.AssignedTo.Name}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-5 control-label">Type:</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static">{{newTicket.Type.Name}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-5 control-label">Priority:</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static">{{newTicket.Priority.Name}}</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-5 control-label">Status:</label>
+                <div class="col-sm-7">
+                    <p class="form-control-static">{{newTicket.Status.Name}}</p>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="panel-footer">
+        <button class="btn btn-danger" ng-click="closeTicket(newTicket)"><i class='glyphicon glyphicon-ban-circle ax_icon'></i>Close Ticket</button>
+        <button class="btn btn-success" ng-click="solvedTicket(newTicket)"><i class='glyphicon glyphicon-ok-circle ax_icon'></i>Ticket Solved</button>
+    </div>
+</div>

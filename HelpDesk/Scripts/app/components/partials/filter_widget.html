@@ -1,0 +1,21 @@
+<div class='btn-group pull-left aa_filter_control'>
+    <button class='btn btn-info'>Filter</button>
+    <button class='btn btn-info dropdown-toggle aa_dropdown_toggle' data-toggle='dropdown'> <span class='caret'></span></button>
+    <div class='dropdown-menu aa_filter_form'>
+    	<form class='form-vertical'>
+    		<div class='control-group'>
+		     <label class='control-label' for='start_date'>Start Date:</label>
+		     <div class='controls'>
+		        <input type='text' id='start_date' placeholder='' class='long aa_date' ng-model='filter.startDate'>
+		     </div>
+		    </div>
+		    <div class='control-group'>
+		     <label class='control-label' for='end_date'>End Date:</label>
+		     <div class='controls'>
+		        <input type='text' id='end_date' placeholder='' class='long aa_date' ng-model='filter.endDate'>
+		     </div>
+		    </div>
+		    <button class='btn btn-info'>Filter</button>
+    	</form>
+    </div>
+</div>

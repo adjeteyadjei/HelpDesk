@@ -1,0 +1,17 @@
+﻿@functions{
+    private string PrintActive(string link)
+    {
+        return link == ViewBag.Nav ? "active" : string.Empty;
+    }
+
+}
+<div class="sideBar">
+    <ul>
+        <li>@Html.ActionLink("Home", "Index", "Home", null, new { @class = PrintActive("Home") })</li>
+        <li>@Html.ActionLink("Tickets", "Index", "Ticket", null, new { @class = PrintActive("Tickets") })</li>
+        <li>@Html.ActionLink("Reports", "Index", "Report", null, new { @class = PrintActive("Reports") })</li>
+        <li>@Html.ActionLink("Teams", "Team", "Administration", null, new { @class = PrintActive("Teams") })</li>
+        <li>@Html.ActionLink("Users", "Users", "Administration", null, new { @class = PrintActive("Users") })</li>
+        <li>@Html.ActionLink("Configuration", "Index", "Configuration", null, new { @class = PrintActive("Config") })</li>
+    </ul>
+</div>

@@ -1,0 +1,75 @@
+﻿<div class="panel panel-primary">
+    <div class="panel-heading">Ticket Thread</div>
+    <div class="panel-body">
+        <div class="ticket_show">
+            <ol class="conversation_thread" id="original_request">
+                <li class="conversation">
+                    <div class="avatar-wrap">
+                        <div class="preview_pic">
+                            <img alt="" src="/Content/img/profile_blank_thumb.gif">
+                        </div>
+                    </div>
+                    <div class="commentbox">
+                        <h2 class="subject ">
+                            {{newTicket.Title}}
+                        </h2>
+                        <div class="author-mail-detail">
+                            <div>
+                                <strong class="username">{{newTicket.CreatedBy.FullName}}</strong>
+                                reported on {{newTicket.CreatedAt}}
+                            </div>
+                        </div>
+                        <div id="ticket_original_request">
+                            <div>This is the decription of the problem. Call me if you don't understand.</div>
+                        </div>
+                    </div>
+                </li>
+            </ol>
+
+            @*<ol class="conversation_thread" id="all_notes">
+                    <li class="conversation ">
+                        <div class="avatar-wrap">
+                            <div class="preview_pic">
+                                <img alt=""  src="/Content/img/profile_blank_thumb.gif">
+                            </div>
+                        </div>
+                        <div class="commentbox commentbox-gray">
+                            <div class="helpdesk_note">
+                                <div class="author-mail-detail">
+                                    <strong class="username">Adjetey</strong> commented on Sunday, 3rd November 2013 at 1:30 PM
+                                </div>
+
+                                <div class="details">
+                                    Hi, Racheal
+                                </div>
+                            </div>
+                        </div>
+
+                    </li>
+
+                </ol>*@
+
+            <ol class="redactor conversation_thread">
+                <li class="conversation">
+                    <div class="avatar-wrap">
+                        <div class="preview_pic">
+                            <img alt="" src="/Content/img/profile_blank_thumb.gif">
+                        </div>
+                    </div>
+                    <div class="commentbox commentbox-gray">
+                        <div id="TicketForms">
+                            <div class="request_panel" id="cnt-note" style="display: block;">
+                                <div class="" id="HelpdeskNotes">
+                                    <div class="form_title">Add comment  <button class="btn btn-primary pull-right" ng-click="test()"><i class='glyphicon glyphicon-comment ax_icon'></i>Post Comment</button></div>
+                                    <textarea class="form-control" rows="5" cols="10"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </li>
+            </ol>
+
+        </div>
+    </div>
+</div>

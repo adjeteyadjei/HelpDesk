@@ -1,0 +1,50 @@
+﻿<div class="panel panel-primary">
+    <div class="panel-heading">Create New Ticket</div>
+    <div class="panel-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                <label class="control-label" for="Subject">Subject:</label>
+                <div class="controls">
+                    <input type="text" id="Subject" class="form-control" value="" ng-model="newTicket.Subject" required="required" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="Description">Description:</label>
+                <div class="controls">
+                    <textarea id="Description" class="form-control" ng-model="newTicket.Description" cols="3" rows="5" required="required"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Agent(s):</label>
+                <div class="controls">
+                    <select ui-select2="{ allowClear: true}" class="form-control non_input_control"
+                            ng-model="newTicket.AssignedTo" ng-options="agent.FullName for agent in agents">
+                        <option value=""></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="Type">Type:</label>
+                <div class="controls">
+                    <select ng-options="type as type.Name for type in types" id="Type"
+                            ng-model="newTicket.Type" class="form-control"></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label" for="Priority">Priority:</label>
+                <div class="controls">
+                    <select ng-options="priority as priority.Name for priority in priorities"
+                            id="Priority" ng-model="newTicket.Priority" class="form-control"></select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="panel-footer">
+        <button class="btn btn-primary" ng-click="saveTicket(newTicket)"><i class='iconfa-save'></i>Post Ticket</button>
+        <button class="btn btn-default" ng-click="closeTicketForm()"><i class='glyphicon glyphicon-ban-circle'></i>Cancel</button>
+    </div>
+</div>

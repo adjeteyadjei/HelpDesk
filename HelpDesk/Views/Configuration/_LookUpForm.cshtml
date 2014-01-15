@@ -1,0 +1,33 @@
+﻿<div class="modal fade" id="lookUp_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <div class="modal-header">
+                    <a class="close" data-dismiss="modal">×</a>
+                    <h4>{{ formTitle }} </h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="control-label" for="Name">Name:</label>
+                        <div class="controls">
+                            <input type="text" id="Name" class="form-control" value="" ng-model="newLookUp.Name" required="required" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label" for="Description">Description:</label>
+                        <div class="controls">
+                            <textarea id="Description" class="form-control" ng-model="newLookUp.Description" cols="5" rows="5"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button ng-show="newLookUp.Id" class="btn btn-danger pull-left" ng-click="confirmDelete(newLookUp)"><i class="glyphicon glyphicon-remove"></i>Delete</button>
+                    <button class="btn btn-primary" ng-click="saveLookUp(newLookUp)"><i class='iconfa-save'></i>Save {{lookUpModel.name}} </button>
+                    <button class="btn btn-default" data-dismiss="modal"><i class='iconfa-ban-circle'></i>Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</div>

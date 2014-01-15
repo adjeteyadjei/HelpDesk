@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Nav = "Tickets";
+}
+
+<div class="page-header">
+    <div class="">
+        <strong>
+            <a href="#">Ticket</a>
+            <small>Create and view your all tickets</small>
+        </strong>
+
+    </div>
+</div>
+
+<div class="row page_content" ng-controller="TicketController">
+    <div class="form-horizontal" role="form">
+        <div class="form-group">
+            @*<label for="project" class="col-sm-2 control-label">Select Project:</label>*@
+            <div class="col-sm-3">
+                <select id="project" class="form-control" ng-model="selectedProject"
+                        ng-options="project as project.Name for project in projects"
+                        ng-change="projectChange(selectedProject)"></select>
+            </div>
+            <div class="col-sm-9">
+                
+            </div>
+        </div>
+    </div>
+    <div class="{{grid_size}}" id="ticket_grid">
+        @Html.Partial("_TicketGrid")
+    </div>
+
+    <div class="col-sm-4 animated slideInRight" ng-show="showCreate" id="ticket_form">
+        @Html.Partial("_TicketForm")
+    </div>
+
+</div>
+
+@section scripts
+{
+    <script src="~/Scripts/app/controllers/TicketsController.js"></script>
+}

@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+<html>
+@Html.Partial("_Head")
+<body ng-app="helpdesk">
+    @Html.Partial("_Header")
+    @*@Html.Partial("_NavBar")*@
+    <div class="mainContainer">
+        @RenderBody()
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/angularjs")
+    @Scripts.Render("~/bundles/appjs")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

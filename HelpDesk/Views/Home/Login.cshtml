@@ -1,0 +1,68 @@
+﻿@model HelpDesk.Models.LoginModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Help Desk</title>
+    @Styles.Render("~/Content/skins")
+
+    <style type="text/css">
+        .login_box {
+            width: 420px;
+            margin: auto;
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login_box">
+        <div class="panel panel-primary">
+            <div class="panel-heading"> <i class="glyphicon glyphicon-lock"></i> <strong>HELP DESK</strong></div>
+            <div class="panel-body">
+                @using (Html.BeginForm("Login", "Home", FormMethod.Post, new { id = "login_form" }))
+                {
+                    <form class="form-horizontal" ng-submit="" role="form" id="login_form">
+                        <div class="alert-danger">
+                            @Html.ValidationSummary(true)
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                @Html.TextBoxFor(model => model.UserName, new { required = "required", placeholder = "Username", @class = "form-control" })
+                                @*<input type="text" class="form-control" id="inputEmail3" placeholder="Username">*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                @Html.TextBoxFor(model => model.Password, new { type = "password", required = "required", placeholder = "Password", @class = "form-control" })
+                                @*<input type="password" class="form-control" id="inputPassword3" placeholder="Password">*@
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <div class="checkbox">
+                                    <label>
+                                        @*<input type="checkbox">*@
+                                        @Html.CheckBoxFor(model => model.RememberMe)Remember me
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-12">
+                                <button type="submit" class="btn btn-primary btn-lg btn-block"><i class="glyphicon glyphicon-log-in"></i>Sign in</button>
+                            </div>
+                        </div>
+                    </form>
+                }
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
