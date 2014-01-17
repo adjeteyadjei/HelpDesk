@@ -176,8 +176,8 @@ namespace HelpDesk.Migrations
             context.Statuses.AddOrUpdate(a => a.Name,
                 new Status
                 {
-                    Name = "Opened",
-                    Description = "Opened",
+                    Name = "New",
+                    Description = "New",
                     UpdatedAt = DateTime.Now,
                     CreatedAt = DateTime.Now,
                     CreatedById = 1.ToString(),
@@ -186,8 +186,19 @@ namespace HelpDesk.Migrations
                 },
                 new Status
                 {
-                    Name = "New",
-                    Description = "New",
+                    Name = "Opened",
+                    Description = "Opened",
+                    UpdatedAt = DateTime.Now,
+                    CreatedAt = DateTime.Now,
+                    CreatedById = 1.ToString(),
+                    UpdatedById = 1.ToString(),
+                    IsDeleted = false
+                },
+                
+                new Status
+                {
+                    Name = "Pending",
+                    Description = "Pending",
                     UpdatedAt = DateTime.Now,
                     CreatedAt = DateTime.Now,
                     CreatedById = 1.ToString(),
@@ -206,8 +217,8 @@ namespace HelpDesk.Migrations
                 },
                 new Status
                 {
-                    Name = "Pending",
-                    Description = "Pending",
+                    Name = "Closed",
+                    Description = "Closed",
                     UpdatedAt = DateTime.Now,
                     CreatedAt = DateTime.Now,
                     CreatedById = 1.ToString(),

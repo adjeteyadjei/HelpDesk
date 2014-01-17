@@ -11,12 +11,12 @@
                     </div>
                     <div class="commentbox">
                         <h2 class="subject ">
-                            {{newTicket.Title}}
+                            {{newTicket.Subject}}
                         </h2>
                         <div class="author-mail-detail">
                             <div>
-                                <strong class="username">{{newTicket.CreatedBy.FullName}}</strong>
-                                reported on {{newTicket.CreatedAt}}
+                                <strong class="username">{{newTicket.AssignedBy.FullName}}</strong>
+                                reported on <label>{{newTicket.CreatedAt | date:'dd MMMM yyyy - h:mm:a'}}</label>
                             </div>
                         </div>
                         <div id="ticket_original_request">
@@ -60,8 +60,8 @@
                         <div id="TicketForms">
                             <div class="request_panel" id="cnt-note" style="display: block;">
                                 <div class="" id="HelpdeskNotes">
-                                    <div class="form_title">Add comment  <button class="btn btn-primary pull-right" ng-click="test()"><i class='glyphicon glyphicon-comment ax_icon'></i>Post Comment</button></div>
-                                    <textarea class="form-control" rows="5" cols="10"></textarea>
+                                    <div class="form_title">Add comment  <button class="btn btn-primary pull-right" ng-click="postComment(comment)"><i class='glyphicon glyphicon-comment ax_icon'></i>Post Comment</button></div>
+                                    <textarea class="form-control" rows="5" cols="10" ng-model="comment"></textarea>
                                 </div>
                             </div>
                         </div>

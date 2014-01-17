@@ -196,11 +196,16 @@ namespace HelpDesk.Classes.Repositories
                 {
                     var data = new List<ProjectModel>();
                     data.Clear();
-                    var projects = db.Projects.Where(p => p.IsDeleted == false).ToList();
-                    var total = projects.Count();
+                    var projects = db.Projects.Where(p => p.IsDeleted == false);
+                    if (filters != null && filters.ProjectId != 0)
+                    {
+                        projects = projects.Where(p => p.Id == filters.ProjectId);
+                    }
+                    var ps = projects.ToList();
+                    var total = ps.Count();
                     var message = "No Project was Found";
                     if (total <= 0) return _dh.ReturnJsonData(data, false, message, total);
-                    data.AddRange(projects.Select(project => new ProjectModel
+                    data.AddRange(ps.Select(project => new ProjectModel
                     {
                         ProjectId = project.Id,
                         Id = project.Id,

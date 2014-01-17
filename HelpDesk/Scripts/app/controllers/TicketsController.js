@@ -41,12 +41,13 @@ app.controller("TicketController", ['$scope', '$http', 'Ticket', 'MsgBox', 'OBJ'
 
     $scope.projectChange = function () {
         $scope.tickets = [];
+        
         $http.get('/api/ticket?ProjectId=' + $scope.selectedProject.Id).success(function (res) {
             $scope.tickets = res.data;
             if (res.success) {
                 MsgBox.info(res.message);
             } else {
-                MsgBox.error(res.message);
+                MsgBox.notice(res.message);
             }
         });
     };

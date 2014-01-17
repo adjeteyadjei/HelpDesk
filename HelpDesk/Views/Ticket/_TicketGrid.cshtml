@@ -26,7 +26,7 @@
                                             </h3>
 
                                             <div class="info-data hideForList">
-                                                <div><strong>From:</strong><span class="lval">{{ticket.CreatedBy.UserName}}</span></div>
+                                                <div><strong>From:</strong><span class="lval">{{ticket.AssignedBy.FullName}}</span></div>
                                                 <div><strong>Created:</strong><span class="lval">{{ticket.CreatedAt}}</span></div>
                                             </div>
                                         </div>
@@ -39,7 +39,7 @@
                                         <ul>
                                             <li class="quick-action">
                                                 <label>Agent: </label>
-                                                <span class="result">{{ticket.AssignedTo.UserName}}</span>
+                                                <span class="result">{{ticket.AssignedTo.FullName}}</span>
                                             </li>
 
                                             <li class="quick-action">

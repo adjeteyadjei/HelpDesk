@@ -12,7 +12,7 @@
     </div>
 </div>
 
-<div class="row page_content" ng-controller="TicketController">
+<div class="row page_content" ng-controller="TicketThreadController">
     <input type="hidden" id="ticket_code" value="@ViewBag.id" />
     <div class="col-sm-3">
         @Html.Partial("_TicketProperties")
@@ -21,9 +21,11 @@
     <div class="col-sm-9">
         @Html.Partial("_PostThread")
     </div>
+    
+    @Html.Partial("_ForwardTicket")
 </div>
 
 @section scripts
 {
-    <script src="~/Scripts/app/controllers/TicketsController.js"></script>
+    <script src="~/Scripts/app/controllers/TicketThreadController.js"></script>
 }

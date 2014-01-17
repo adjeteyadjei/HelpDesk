@@ -486,7 +486,6 @@ td ol, td ul {
         -webkit-text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        width: 95px;
         padding-right: 20px;
         padding-left: 5px;
         vertical-align: bottom;
@@ -628,7 +627,7 @@ td ol, td ul {
 }
 
 .commentbox .details, .commentbox #ticket_original_request {
-    margin-top: 30px;
+    margin-top: 15px;
     overflow-x: auto;
 }
 
@@ -781,7 +780,7 @@ li .activity_content {
 
 .commentbox .username {
     color: #005580;
-    margin-right: 5px;
+    margin-right: 1px;
     font-weight: bold;
 }
 

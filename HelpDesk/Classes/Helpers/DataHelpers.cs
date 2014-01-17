@@ -9,7 +9,7 @@ namespace HelpDesk.Classes.Helpers
 {
     public class DataHelpers
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        //private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public JsonData ReturnJsonData(object data = null, bool success = false, string message = "", int total = 0)
         {
             return new JsonData
@@ -36,13 +36,13 @@ namespace HelpDesk.Classes.Helpers
                                                .Select(x => string.Format("{0} => {1}", x.name, string.Join(",", x.errors)));
                 text = string.Join("\r\n", lines);
 
-                Logger.Error(text);
+                //Logger.Error(text);
                 return ReturnJsonData(null, false, text);
             }
 
             //for any other exception, just get the full message
             text = GetErrorMessages(exception).Aggregate((a, b) => a + "\r\n" + b);
-            Logger.Error(text);
+            //Logger.Error(text);
             return ReturnJsonData(null, false, text);
         }
 
@@ -83,7 +83,7 @@ namespace HelpDesk.Classes.Helpers
         {
             var roles = new List<string>
             {
-               "New","Opened","Pending","Solved" 
+               "New","Opened","Pending","Solved","Closed"
             };
             return roles;
         }

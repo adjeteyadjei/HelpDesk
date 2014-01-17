@@ -48,5 +48,32 @@ namespace HelpDesk.ApiControllers
             var user = UserManager.FindByName(User.Identity.Name);
             return _repo.Delete(id, user);
         }
+
+        [Route("api/ticket/close")]
+        [HttpPut]
+        [Authorize]
+        public JsonData Close(int ticketId)
+        {
+            var user = UserManager.FindByName(User.Identity.Name);
+            return _repo.UpdateStatus(ticketId, user, "Close");
+        }
+
+        [Route("api/ticket/open")]
+        [HttpPut]
+        [Authorize]
+        public JsonData Open(int ticketId)
+        {
+            var user = UserManager.FindByName(User.Identity.Name);
+            return _repo.UpdateStatus(ticketId, user, "Open");
+        }
+
+        [Route("api/ticket/resolve")]
+        [HttpPut]
+        [Authorize]
+        public JsonData Resolve(int ticketId)
+        {
+            var user = UserManager.FindByName(User.Identity.Name);
+            return _repo.UpdateStatus(ticketId, user, "Resolve");
+        }
     }
 }

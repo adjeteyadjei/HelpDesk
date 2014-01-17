@@ -28,6 +28,8 @@ namespace HelpDesk.Models
         public string AssignedById { get; set; }
         public virtual User AssignedBy { get; set; }
         public int ParentId { get; set; }
-        public TicketDetail[] TicketDetail { get; set; }
+        public List<TicketDetail> TicketDetail { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

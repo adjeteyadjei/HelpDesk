@@ -5,19 +5,19 @@
             <div class="form-group">
                 <label class="col-sm-5 control-label">Date Created:</label>
                 <div class="col-sm-7">
-                    <p class="form-control-static">{{newTicket.CreatedAt}}</p>
+                    <p class="form-control-static">{{newTicket.CreatedAt | date:'dd MMM yyyy - h:mm:a'}}</p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-5 control-label">Created By:</label>
                 <div class="col-sm-7">
-                    <p class="form-control-static">{{newTicket.AssignedBy.Name}}</p>
+                    <p class="form-control-static">{{newTicket.AssignedBy.FullName}}</p>
                 </div>
             </div>
             <div class="form-group">
                 <label class="col-sm-5 control-label">Assigned To:</label>
                 <div class="col-sm-7">
-                    <p class="form-control-static">{{newTicket.AssignedTo.Name}}</p>
+                    <p class="form-control-static">{{newTicket.AssignedTo.FullName}}</p>
                 </div>
             </div>
             <div class="form-group">
@@ -29,7 +29,7 @@
             <div class="form-group">
                 <label class="col-sm-5 control-label">Priority:</label>
                 <div class="col-sm-7">
-                    <p class="form-control-static">{{newTicket.Priority.Name}}</p>
+                    <p class="form-control-static"> <span class="{{newTicket.Priority.Name | lowercase}}">{{newTicket.Priority.Name}}</span> </p>
                 </div>
             </div>
             <div class="form-group">
@@ -41,7 +41,17 @@
         </form>
     </div>
     <div class="panel-footer">
-        <button class="btn btn-danger" ng-click="closeTicket(newTicket)"><i class='glyphicon glyphicon-ban-circle ax_icon'></i>Close Ticket</button>
-        <button class="btn btn-success" ng-click="solvedTicket(newTicket)"><i class='glyphicon glyphicon-ok-circle ax_icon'></i>Ticket Solved</button>
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                <i class="glyphicon glyphicon-list-alt"></i>Ticket Action
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#" data-toggle="modal" data-target="#forward_form"><i class="glyphicon glyphicon-share ax_icon"></i>Forward Ticket</a></li>
+                <li><a href="#" ng-click="solvedTicket(newTicket)"><i class='glyphicon glyphicon-ok-circle ax_icon'></i>Ticket Solved</a></li>
+                <li class="divider"></li>
+                <li><a href="#" ng-click="closeTicket(newTicket)"> <i class='glyphicon glyphicon-ban-circle ax_icon'></i>Close Ticket</a></li>
+            </ul>
+        </div>
     </div>
 </div>

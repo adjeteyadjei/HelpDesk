@@ -1,4 +1,0 @@
-HelpDesk
-========
-
-Axon Help Desk

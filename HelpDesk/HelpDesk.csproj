@@ -340,6 +340,7 @@
     <Content Include="Scripts\app\controllers\ProjectController.js" />
     <Content Include="Scripts\app\controllers\TeamController.js" />
     <Content Include="Scripts\app\controllers\TicketsController.js" />
+    <Content Include="Scripts\app\controllers\TicketThreadController.js" />
     <Content Include="Scripts\app\controllers\UsersController.js" />
     <Content Include="NLog.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -719,6 +720,7 @@
     <Content Include="Views\Home\Login.cshtml" />
     <Content Include="Views\Project\Index.cshtml" />
     <Content Include="Views\Project\_ProjectForm.cshtml" />
+    <Content Include="Views\Ticket\_ForwardTicket.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

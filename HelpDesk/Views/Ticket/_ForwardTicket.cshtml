@@ -1,0 +1,25 @@
+﻿<div class="modal fade" id="forward_form" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Foward Ticket To Another Team</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label" for="Team">Select Team:</label>
+                        <div class="controls">
+                            <select ng-options="team as team.Name for team in teams" id="Team"
+                                    ng-model="forwardTeam" class="form-control"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" ng-click="forwardTicket(forwardTeam)"><i class='iconfa-save'></i>Forward</button>
+                <button class="btn btn-default" data-dismiss="modal"><i class='iconfa-ban-circle'></i>Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
