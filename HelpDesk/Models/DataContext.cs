@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 using System.Linq;
 using System.Web;
+using HelpDesk.Migrations;
 using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace HelpDesk.Models
@@ -28,6 +29,12 @@ namespace HelpDesk.Models
         public DbSet<TicketDetail> TicketDetails { get; set; }
         public DbSet<ProjectLeader> ProjectLeaders { get; set; }
         public DbSet<TicketComment> TicketComments { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
+            base.OnModelCreating(modelBuilder);
+        }
 
     }
 }
