@@ -11,7 +11,6 @@ namespace HelpDesk.Classes.Repositories
     public class ProjectRepo
     {
         private readonly DataHelpers _dh = new DataHelpers();
-        private readonly DataContext _db = new DataContext();
 
         public JsonData Post(ProjectModel newRecord, User user)
         {

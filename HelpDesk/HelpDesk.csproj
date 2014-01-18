@@ -229,13 +229,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201401161313178_FirstMigration.cs" />
-    <Compile Include="Migrations\201401161313178_FirstMigration.Designer.cs">
-      <DependentUpon>201401161313178_FirstMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201401161334505_ChangedTableName.cs" />
-    <Compile Include="Migrations\201401161334505_ChangedTableName.Designer.cs">
-      <DependentUpon>201401161334505_ChangedTableName.cs</DependentUpon>
+    <Compile Include="Migrations\201401181942187_FirstMigration.cs" />
+    <Compile Include="Migrations\201401181942187_FirstMigration.Designer.cs">
+      <DependentUpon>201401181942187_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -719,11 +715,8 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201401161313178_FirstMigration.resx">
-      <DependentUpon>201401161313178_FirstMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201401161334505_ChangedTableName.resx">
-      <DependentUpon>201401161334505_ChangedTableName.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201401181942187_FirstMigration.resx">
+      <DependentUpon>201401181942187_FirstMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

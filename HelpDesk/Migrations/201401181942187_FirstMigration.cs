@@ -253,7 +253,7 @@ namespace HelpDesk.Migrations
                 .Index(t => t.UpdatedById);
             
             CreateTable(
-                "dbo.CommentModels",
+                "dbo.TicketComments",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
@@ -377,8 +377,8 @@ namespace HelpDesk.Migrations
             DropForeignKey("dbo.TicketDetails", "CreatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.TicketDetails", "AssignedToId", "dbo.AspNetUsers");
             DropForeignKey("dbo.TicketDetails", "AssignedById", "dbo.AspNetUsers");
-            DropForeignKey("dbo.CommentModels", "UpdatedById", "dbo.AspNetUsers");
-            DropForeignKey("dbo.CommentModels", "TicketId", "dbo.Tickets");
+            DropForeignKey("dbo.TicketComments", "UpdatedById", "dbo.AspNetUsers");
+            DropForeignKey("dbo.TicketComments", "TicketId", "dbo.Tickets");
             DropForeignKey("dbo.Tickets", "UpdatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.Tickets", "TypeId", "dbo.Types");
             DropForeignKey("dbo.Types", "UpdatedById", "dbo.AspNetUsers");
@@ -389,7 +389,7 @@ namespace HelpDesk.Migrations
             DropForeignKey("dbo.Tickets", "CreatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.Tickets", "AssignedToId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Tickets", "AssignedById", "dbo.AspNetUsers");
-            DropForeignKey("dbo.CommentModels", "CreatedById", "dbo.AspNetUsers");
+            DropForeignKey("dbo.TicketComments", "CreatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.TeamRelations", "UpdatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.TeamRelations", "TeamTwoId", "dbo.Teams");
             DropForeignKey("dbo.TeamRelations", "CreatedById", "dbo.AspNetUsers");
@@ -422,8 +422,8 @@ namespace HelpDesk.Migrations
             DropIndex("dbo.TicketDetails", new[] { "CreatedById" });
             DropIndex("dbo.TicketDetails", new[] { "AssignedToId" });
             DropIndex("dbo.TicketDetails", new[] { "AssignedById" });
-            DropIndex("dbo.CommentModels", new[] { "UpdatedById" });
-            DropIndex("dbo.CommentModels", new[] { "TicketId" });
+            DropIndex("dbo.TicketComments", new[] { "UpdatedById" });
+            DropIndex("dbo.TicketComments", new[] { "TicketId" });
             DropIndex("dbo.Tickets", new[] { "UpdatedById" });
             DropIndex("dbo.Tickets", new[] { "TypeId" });
             DropIndex("dbo.Types", new[] { "UpdatedById" });
@@ -434,7 +434,7 @@ namespace HelpDesk.Migrations
             DropIndex("dbo.Tickets", new[] { "CreatedById" });
             DropIndex("dbo.Tickets", new[] { "AssignedToId" });
             DropIndex("dbo.Tickets", new[] { "AssignedById" });
-            DropIndex("dbo.CommentModels", new[] { "CreatedById" });
+            DropIndex("dbo.TicketComments", new[] { "CreatedById" });
             DropIndex("dbo.TeamRelations", new[] { "UpdatedById" });
             DropIndex("dbo.TeamRelations", new[] { "TeamTwoId" });
             DropIndex("dbo.TeamRelations", new[] { "CreatedById" });
@@ -463,7 +463,7 @@ namespace HelpDesk.Migrations
             DropTable("dbo.TicketDetails");
             DropTable("dbo.Types");
             DropTable("dbo.Tickets");
-            DropTable("dbo.CommentModels");
+            DropTable("dbo.TicketComments");
             DropTable("dbo.TeamRelations");
             DropTable("dbo.TeamMembers");
             DropTable("dbo.Status");

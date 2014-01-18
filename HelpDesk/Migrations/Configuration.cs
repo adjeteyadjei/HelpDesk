@@ -19,7 +19,7 @@ namespace HelpDesk.Migrations
         public Configuration()
             : this(new UserManager<User>(new UserStore<User>(MyContext)))
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         public Configuration(UserManager<User> userManager)
