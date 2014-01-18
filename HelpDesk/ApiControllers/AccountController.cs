@@ -396,7 +396,79 @@ namespace HelpDesk.ApiControllers
             }
         }
 
+        [Route("api/account/users/assign")]
+        [HttpGet]
+        [Authorize]
+        //[ValidateAntiForgeryToken]
+        public JsonData GetUsersForAssignment(Filter filters)
+        {
+            try
+            {
+                var currentUser = _sh.GetUserWithName(User.Identity.Name);
+                using (var db = new DataContext())
+                {
+                    var data = new List<UserModel>();
+                    data.Clear();
+
+                    var users = db.Users.ToList();
+
+                    //filter the users with a condition
+                    users = FilterUsersForAssignment(users, currentUser, db);
+
+                    var total = users.Count();
+                    var message = "No User Found";
+                    if (total <= 0) return _dh.ReturnJsonData(null, false, message, total);
+
+                    data.AddRange(users.Select(user => new UserModel
+                    {
+                        Team = GetUserTeam(user.Id, db),
+                        Id = user.Id,
+                        UserName = user.UserName,
+                        FullName = user.FullName,
+                        Email = user.Email,
+                        PhoneNumber = user.PhoneNumber,
+                        Picture = user.Picture,
+                        DateOfBirth = user.DateOfBirth,
+                        IsAdmin = user.Roles.Select(x => x.Role.Name).Contains("Administrator"),
+                        IsDeleted = false,
+                        CreatedAt = user.CreatedAt,
+                        UpdatedAt = user.UpdatedAt,
+                        Roles = user.Roles.Select(x => x.Role.Name).ToList()
+                    }));
+
+                    message = "Users loaded successfully";
+                    return _dh.ReturnJsonData(data, true, message, total);
+                }
+            }
+            catch (Exception e)
+            {
+                return _dh.ExceptionProcessor(e);
+            }
+        }
+
         public List<User> FilterUsers(List<User> users, User currentUser, DataContext db)
+        {
+            var newUsers = new List<User>();
+            newUsers.Clear();
+            var allRoles = _dh.GetRoles();
+            var roles = currentUser.Roles.Select(x => x.Role.Name).ToList();
+
+            foreach (var role in roles)
+            {
+                if (role != allRoles[1])
+                {
+                    var leader = db.TeamMembers.FirstOrDefault(x => x.UserId == currentUser.Id && !x.IsDeleted);
+                    newUsers = db.TeamMembers.Where(x => x.TeamId == leader.TeamId).Select(x => x.User).ToList();
+                }
+                else
+                {
+                    newUsers = users;
+                }
+            }
+            return newUsers;
+        }
+
+        public List<User> FilterUsersForAssignment(List<User> users, User currentUser, DataContext db)
         {
             var newUsers = new List<User>();
             newUsers.Clear();

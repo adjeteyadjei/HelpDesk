@@ -10,6 +10,7 @@ namespace HelpDesk.Models
     public class TicketModel
     {
         public int Id { get; set; }
+        public int TicketId { get; set; }
         public string Subject { get; set; }
         public string Description { get; set; }
         public string Code { get; set; }
@@ -29,6 +30,7 @@ namespace HelpDesk.Models
         public virtual User AssignedBy { get; set; }
         public int ParentId { get; set; }
         public List<TicketDetail> TicketDetail { get; set; }
+        public List<CommentViewModel> Comments { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

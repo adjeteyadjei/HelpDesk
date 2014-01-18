@@ -31,4 +31,28 @@ namespace HelpDesk.Models
         public virtual User AssignedBy { get; set; }
         
     }
+
+    public class CommentViewModel
+    {
+        public int Id { get; set; }
+
+        public int TicketId { get; set; }
+        public string Comment { get; set; }
+        public virtual Ticket Ticket { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+        public string CreatedById { get; set; }
+        public virtual User CreatedBy { get; set; }
+        public string UpdatedById { get; set; }
+        public virtual User UpdatedBy { get; set; }
+    }
+
+    public class TicketComment : AuditFileds
+    {
+        public int Id { get; set; }
+        public string Comment { get; set; }
+        public int TicketId { get; set; }
+        public virtual Ticket Ticket { get; set; }
+    }
 }

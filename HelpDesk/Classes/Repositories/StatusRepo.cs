@@ -4,16 +4,12 @@ using System.Linq;
 using System.Web;
 using HelpDesk.Classes.Helpers;
 using HelpDesk.Models;
-using NLog;
-
 namespace HelpDesk.Classes.Repositories
 {
     public class StatusRepo
     {
         private readonly DataHelpers _dh = new DataHelpers();
         private readonly DataContext _db = new DataContext();
-        private readonly SecurityHelpers _sh = new SecurityHelpers();
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public JsonData Post(Status newRecord, User user)
         {

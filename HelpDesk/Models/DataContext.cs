@@ -27,6 +27,7 @@ namespace HelpDesk.Models
         public DbSet<Ticket> Tickets { get; set; }
         public DbSet<TicketDetail> TicketDetails { get; set; }
         public DbSet<ProjectLeader> ProjectLeaders { get; set; }
+        public DbSet<TicketComment> TicketComments { get; set; }
 
     }
 }

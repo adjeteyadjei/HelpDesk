@@ -8,7 +8,6 @@ using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
-using NLog;
 
 namespace HelpDesk.Controllers
 {

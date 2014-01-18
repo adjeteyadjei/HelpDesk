@@ -52,14 +52,14 @@ namespace HelpDesk.ApiControllers
         [Route("api/ticket/close")]
         [HttpPut]
         [Authorize]
-        public JsonData Close(int ticketId)
+        public JsonData Close(TicketModel ticket)
         {
             var user = UserManager.FindByName(User.Identity.Name);
-            return _repo.UpdateStatus(ticketId, user, "Close");
+            return _repo.UpdateStatus(ticket.TicketId, user, "Close");
         }
 
         [Route("api/ticket/open")]
-        [HttpPut]
+        [HttpGet]
         [Authorize]
         public JsonData Open(int ticketId)
         {
@@ -70,10 +70,21 @@ namespace HelpDesk.ApiControllers
         [Route("api/ticket/resolve")]
         [HttpPut]
         [Authorize]
-        public JsonData Resolve(int ticketId)
+        public JsonData Resolve(TicketModel ticket)
         {
             var user = UserManager.FindByName(User.Identity.Name);
-            return _repo.UpdateStatus(ticketId, user, "Resolve");
+            return _repo.UpdateStatus(ticket.TicketId, user, "Resolve");
         }
+
+        [Route("api/ticket/comment")]
+        [HttpPut]
+        [Authorize]
+        public JsonData Comment(CommentViewModel comment)
+        {
+            var user = UserManager.FindByName(User.Identity.Name);
+            return _repo.Comment(comment, user);
+        }
+
+
     }
 }

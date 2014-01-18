@@ -2,30 +2,19 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Net.Mail;
-using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
-using System.Web.Http;
-using System.Web.Http.ModelBinding;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin.Security;
-using Microsoft.Owin.Security.Cookies;
-using Microsoft.Owin.Security.OAuth;
 using HelpDesk.Models;
-using HelpDesk.Providers;
-using HelpDesk.Results;
-using NLog;
 
 namespace HelpDesk.Classes.Helpers
 {
     public class SecurityHelpers
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly DataHelpers _dh = new DataHelpers();
         public SecurityHelpers()
             : this(new UserManager<User>(new UserStore<User>(new DataContext())))
@@ -232,7 +221,6 @@ namespace HelpDesk.Classes.Helpers
 
     public static class Utils
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         public static string GenerateVerificationCode(int length, string charset)
         {
             //todo: use the char set
@@ -277,7 +265,7 @@ namespace HelpDesk.Classes.Helpers
             catch (Exception ex)
             {
                 error = ex.GetBaseException().ToString();
-                Logger.Error(ex);
+                //Logger.Error(ex);
                 return false;
             }
         }

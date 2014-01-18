@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using HelpDesk.Classes.Helpers;
 using HelpDesk.Models;
-using NLog;
 
 namespace HelpDesk.Classes.Repositories
 {
@@ -12,8 +11,6 @@ namespace HelpDesk.Classes.Repositories
     {
         private readonly DataHelpers _dh = new DataHelpers();
         private readonly DataContext _db = new DataContext();
-        private readonly SecurityHelpers _sh = new SecurityHelpers();
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public TicketDetail CreateTicketDetail(Ticket newTicket, TicketModel newRecord, User user)
         {

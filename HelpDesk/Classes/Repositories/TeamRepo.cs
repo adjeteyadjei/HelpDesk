@@ -5,7 +5,6 @@ using System.Transactions;
 using System.Web;
 using HelpDesk.Classes.Helpers;
 using HelpDesk.Models;
-using NLog;
 
 namespace HelpDesk.Classes.Repositories
 {

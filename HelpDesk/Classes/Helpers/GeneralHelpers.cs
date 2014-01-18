@@ -33,14 +33,16 @@ namespace HelpDesk.Classes.Helpers
         {
             switch (status)
             {
-                case "Open":
-                    return 1;
-                case "New":
+                case "Opened":
                     return 2;
+                case "New":
+                    return 1;
                 case "Solved":
+                    return 4;
+                case "Pending":
                     return 3;
                 default:
-                    return 4;
+                    return 5;
             }
         }
     }

@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using HelpDesk.Classes.Helpers;
 using HelpDesk.Models;
-using NLog;
 using Type = HelpDesk.Models.Type;
 
 namespace HelpDesk.Classes.Repositories
@@ -13,7 +12,6 @@ namespace HelpDesk.Classes.Repositories
     {
         private readonly DataHelpers _dh = new DataHelpers();
         private readonly DataContext _db = new DataContext();
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
         public JsonData Post(Type newRecord, User user)
         {

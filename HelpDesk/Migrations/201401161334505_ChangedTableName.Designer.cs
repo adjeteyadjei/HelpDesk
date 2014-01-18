@@ -7,13 +7,13 @@ namespace HelpDesk.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.0.1-21010")]
-    public sealed partial class FirstMigration : IMigrationMetadata
+    public sealed partial class ChangedTableName : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(FirstMigration));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ChangedTableName));
         
         string IMigrationMetadata.Id
         {
-            get { return "201401122212268_FirstMigration"; }
+            get { return "201401161334505_ChangedTableName"; }
         }
         
         string IMigrationMetadata.Source

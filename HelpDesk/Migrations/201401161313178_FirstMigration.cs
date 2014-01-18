@@ -253,13 +253,12 @@ namespace HelpDesk.Migrations
                 .Index(t => t.UpdatedById);
             
             CreateTable(
-                "dbo.TicketDetails",
+                "dbo.CommentModels",
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
+                        Comment = c.String(),
                         TicketId = c.Int(nullable: false),
-                        Description = c.String(),
-                        StatusId = c.Int(nullable: false),
                         IsDeleted = c.Boolean(nullable: false),
                         CreatedAt = c.DateTime(nullable: false),
                         UpdatedAt = c.DateTime(nullable: false),
@@ -268,11 +267,9 @@ namespace HelpDesk.Migrations
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedById)
-                .ForeignKey("dbo.Status", t => t.StatusId, cascadeDelete: false)
                 .ForeignKey("dbo.Tickets", t => t.TicketId, cascadeDelete: false)
                 .ForeignKey("dbo.AspNetUsers", t => t.UpdatedById)
                 .Index(t => t.CreatedById)
-                .Index(t => t.StatusId)
                 .Index(t => t.TicketId)
                 .Index(t => t.UpdatedById);
             
@@ -281,8 +278,10 @@ namespace HelpDesk.Migrations
                 c => new
                     {
                         Id = c.Int(nullable: false, identity: true),
-                        Title = c.String(),
+                        Subject = c.String(),
+                        Description = c.String(),
                         Code = c.String(),
+                        ProjectId = c.Int(nullable: false),
                         TypeId = c.Int(nullable: false),
                         StatusId = c.Int(nullable: false),
                         PriorityId = c.Int(nullable: false),
@@ -300,6 +299,7 @@ namespace HelpDesk.Migrations
                 .ForeignKey("dbo.AspNetUsers", t => t.AssignedToId)
                 .ForeignKey("dbo.AspNetUsers", t => t.CreatedById)
                 .ForeignKey("dbo.Priorities", t => t.PriorityId, cascadeDelete: false)
+                .ForeignKey("dbo.Projects", t => t.ProjectId, cascadeDelete: false)
                 .ForeignKey("dbo.Status", t => t.StatusId, cascadeDelete: false)
                 .ForeignKey("dbo.Types", t => t.TypeId, cascadeDelete: false)
                 .ForeignKey("dbo.AspNetUsers", t => t.UpdatedById)
@@ -307,6 +307,7 @@ namespace HelpDesk.Migrations
                 .Index(t => t.AssignedToId)
                 .Index(t => t.CreatedById)
                 .Index(t => t.PriorityId)
+                .Index(t => t.ProjectId)
                 .Index(t => t.StatusId)
                 .Index(t => t.TypeId)
                 .Index(t => t.UpdatedById);
@@ -330,23 +331,65 @@ namespace HelpDesk.Migrations
                 .Index(t => t.CreatedById)
                 .Index(t => t.UpdatedById);
             
+            CreateTable(
+                "dbo.TicketDetails",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        TicketId = c.Int(nullable: false),
+                        Subject = c.String(),
+                        Description = c.String(),
+                        Code = c.String(),
+                        StatusId = c.Int(nullable: false),
+                        PriorityId = c.Int(nullable: false),
+                        AssignedToId = c.String(maxLength: 128),
+                        AssignedById = c.String(maxLength: 128),
+                        IsDeleted = c.Boolean(nullable: false),
+                        CreatedAt = c.DateTime(nullable: false),
+                        UpdatedAt = c.DateTime(nullable: false),
+                        CreatedById = c.String(maxLength: 128),
+                        UpdatedById = c.String(maxLength: 128),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.AspNetUsers", t => t.AssignedById)
+                .ForeignKey("dbo.AspNetUsers", t => t.AssignedToId)
+                .ForeignKey("dbo.AspNetUsers", t => t.CreatedById)
+                .ForeignKey("dbo.Priorities", t => t.PriorityId, cascadeDelete: false)
+                .ForeignKey("dbo.Status", t => t.StatusId, cascadeDelete: false)
+                .ForeignKey("dbo.Tickets", t => t.TicketId, cascadeDelete: false)
+                .ForeignKey("dbo.AspNetUsers", t => t.UpdatedById)
+                .Index(t => t.AssignedById)
+                .Index(t => t.AssignedToId)
+                .Index(t => t.CreatedById)
+                .Index(t => t.PriorityId)
+                .Index(t => t.StatusId)
+                .Index(t => t.TicketId)
+                .Index(t => t.UpdatedById);
+            
         }
         
         public override void Down()
         {
             DropForeignKey("dbo.TicketDetails", "UpdatedById", "dbo.AspNetUsers");
+            DropForeignKey("dbo.TicketDetails", "TicketId", "dbo.Tickets");
+            DropForeignKey("dbo.TicketDetails", "StatusId", "dbo.Status");
+            DropForeignKey("dbo.TicketDetails", "PriorityId", "dbo.Priorities");
+            DropForeignKey("dbo.TicketDetails", "CreatedById", "dbo.AspNetUsers");
+            DropForeignKey("dbo.TicketDetails", "AssignedToId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.TicketDetails", "AssignedById", "dbo.AspNetUsers");
+            DropForeignKey("dbo.CommentModels", "UpdatedById", "dbo.AspNetUsers");
+            DropForeignKey("dbo.CommentModels", "TicketId", "dbo.Tickets");
             DropForeignKey("dbo.Tickets", "UpdatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.Tickets", "TypeId", "dbo.Types");
             DropForeignKey("dbo.Types", "UpdatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.Types", "CreatedById", "dbo.AspNetUsers");
-            DropForeignKey("dbo.TicketDetails", "TicketId", "dbo.Tickets");
             DropForeignKey("dbo.Tickets", "StatusId", "dbo.Status");
+            DropForeignKey("dbo.Tickets", "ProjectId", "dbo.Projects");
             DropForeignKey("dbo.Tickets", "PriorityId", "dbo.Priorities");
             DropForeignKey("dbo.Tickets", "CreatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.Tickets", "AssignedToId", "dbo.AspNetUsers");
             DropForeignKey("dbo.Tickets", "AssignedById", "dbo.AspNetUsers");
-            DropForeignKey("dbo.TicketDetails", "StatusId", "dbo.Status");
-            DropForeignKey("dbo.TicketDetails", "CreatedById", "dbo.AspNetUsers");
+            DropForeignKey("dbo.CommentModels", "CreatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.TeamRelations", "UpdatedById", "dbo.AspNetUsers");
             DropForeignKey("dbo.TeamRelations", "TeamTwoId", "dbo.Teams");
             DropForeignKey("dbo.TeamRelations", "CreatedById", "dbo.AspNetUsers");
@@ -373,18 +416,25 @@ namespace HelpDesk.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropIndex("dbo.TicketDetails", new[] { "UpdatedById" });
+            DropIndex("dbo.TicketDetails", new[] { "TicketId" });
+            DropIndex("dbo.TicketDetails", new[] { "StatusId" });
+            DropIndex("dbo.TicketDetails", new[] { "PriorityId" });
+            DropIndex("dbo.TicketDetails", new[] { "CreatedById" });
+            DropIndex("dbo.TicketDetails", new[] { "AssignedToId" });
+            DropIndex("dbo.TicketDetails", new[] { "AssignedById" });
+            DropIndex("dbo.CommentModels", new[] { "UpdatedById" });
+            DropIndex("dbo.CommentModels", new[] { "TicketId" });
             DropIndex("dbo.Tickets", new[] { "UpdatedById" });
             DropIndex("dbo.Tickets", new[] { "TypeId" });
             DropIndex("dbo.Types", new[] { "UpdatedById" });
             DropIndex("dbo.Types", new[] { "CreatedById" });
-            DropIndex("dbo.TicketDetails", new[] { "TicketId" });
             DropIndex("dbo.Tickets", new[] { "StatusId" });
+            DropIndex("dbo.Tickets", new[] { "ProjectId" });
             DropIndex("dbo.Tickets", new[] { "PriorityId" });
             DropIndex("dbo.Tickets", new[] { "CreatedById" });
             DropIndex("dbo.Tickets", new[] { "AssignedToId" });
             DropIndex("dbo.Tickets", new[] { "AssignedById" });
-            DropIndex("dbo.TicketDetails", new[] { "StatusId" });
-            DropIndex("dbo.TicketDetails", new[] { "CreatedById" });
+            DropIndex("dbo.CommentModels", new[] { "CreatedById" });
             DropIndex("dbo.TeamRelations", new[] { "UpdatedById" });
             DropIndex("dbo.TeamRelations", new[] { "TeamTwoId" });
             DropIndex("dbo.TeamRelations", new[] { "CreatedById" });
@@ -410,9 +460,10 @@ namespace HelpDesk.Migrations
             DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
+            DropTable("dbo.TicketDetails");
             DropTable("dbo.Types");
             DropTable("dbo.Tickets");
-            DropTable("dbo.TicketDetails");
+            DropTable("dbo.CommentModels");
             DropTable("dbo.TeamRelations");
             DropTable("dbo.TeamMembers");
             DropTable("dbo.Status");

@@ -5,7 +5,6 @@ using System.Transactions;
 using System.Web;
 using HelpDesk.Classes.Helpers;
 using HelpDesk.Models;
-using NLog;
 using Type = HelpDesk.Models.Type;
 
 namespace HelpDesk.Classes.Repositories
@@ -47,7 +46,7 @@ namespace HelpDesk.Classes.Repositories
                         };
 
                         db.Tickets.Add(newTicket);
-                        
+
                         CreateTicketDetail(newTicket, user, db);
                         db.SaveChanges();
                         scope.Complete();
@@ -61,6 +60,7 @@ namespace HelpDesk.Classes.Repositories
                 return _dh.ExceptionProcessor(e);
             }
         }
+
         public void CreateTicketDetail(Ticket newRecord, User user, DataContext db)
         {
             var newTicketDetail = new TicketDetail
@@ -82,6 +82,7 @@ namespace HelpDesk.Classes.Repositories
 
             db.TicketDetails.Add(newTicketDetail);
         }
+
         public JsonData Update(TicketModel updatedRecord, User user)
         {
             try
@@ -114,6 +115,7 @@ namespace HelpDesk.Classes.Repositories
                 return _dh.ExceptionProcessor(e);
             }
         }
+
         public JsonData Delete(int id, User user)
         {
             try
@@ -126,7 +128,7 @@ namespace HelpDesk.Classes.Repositories
                         //db.Tickets.Remove(delRecord);
                         delRecord.IsDeleted = true;
                         delRecord.UpdatedAt = DateTime.Now;
-                        
+
                         CreateTicketDetail(delRecord, user, db);
                         db.SaveChanges();
                         scope.Complete();
@@ -139,6 +141,7 @@ namespace HelpDesk.Classes.Repositories
                 return _dh.ExceptionProcessor(e);
             }
         }
+
         public JsonData GetAll(Filter filters, User user)
         {
             try
@@ -155,7 +158,7 @@ namespace HelpDesk.Classes.Repositories
 
                     var data = new List<TicketModel>();
                     data.Clear();
-                    
+
                     var tickets = ts.ToList();
                     data.AddRange(tickets.Select(ticket => new TicketModel
                     {
@@ -215,7 +218,8 @@ namespace HelpDesk.Classes.Repositories
                             DateOfBirth = ticket.AssignedBy.DateOfBirth
                         },
                         CreatedAt = ticket.CreatedAt,
-                        TicketDetail = GetTicketDetails(ticket.Id).ToList()
+                        TicketDetail = GetTicketDetails(ticket.Id, db).ToList(),
+                        Comments = GetTicketComments(ticket.Id, db).ToList()
                         //AssignedById = ticket.AssignedById
 
                     }));
@@ -228,11 +232,10 @@ namespace HelpDesk.Classes.Repositories
                 return _dh.ExceptionProcessor(e);
             }
         }
-        public TicketDetail[] GetTicketDetails(int ticketId)
+
+        public TicketDetail[] GetTicketDetails(int ticketId, DataContext db)
         {
-            using (var db = new DataContext())
-            {
-                var details = db.TicketDetails.Where(p => p.IsDeleted == false && p.TicketId == ticketId).ToList();
+            var details = db.TicketDetails.Where(p => p.IsDeleted == false && p.TicketId == ticketId).ToList();
                 return details.Select(
                     detail => new TicketDetail
                     {
@@ -268,54 +271,134 @@ namespace HelpDesk.Classes.Repositories
                             PhoneNumber = detail.AssignedBy.PhoneNumber,
                             Picture = detail.AssignedBy.Picture,
                             DateOfBirth = detail.AssignedBy.DateOfBirth
-                        }/**/
+                        } /**/
                     }).ToArray();
-            }
+            
         }
+
+        public CommentViewModel[] GetTicketComments(int ticketId, DataContext db)
+        {
+            var comments = db.TicketComments.Where(p => p.IsDeleted == false && p.TicketId == ticketId).ToList();
+            if (!comments.Any()) return null;
+            return comments.Select(
+                comment => new CommentViewModel
+                {
+                    Comment = comment.Comment,
+                    CreatedAt = comment.CreatedAt,
+                    CreatedBy = new User
+                    {
+                        Id = comment.CreatedBy.Id,
+                        UserName = comment.CreatedBy.UserName,
+                        FullName = comment.CreatedBy.FullName,
+                        Email = comment.CreatedBy.Email,
+                        PhoneNumber = comment.CreatedBy.PhoneNumber,
+                        Picture = comment.CreatedBy.Picture,
+                        DateOfBirth = comment.CreatedBy.DateOfBirth
+                    }
+                }).ToArray();
+        }
+
         public JsonData UpdateStatus(int ticketId, User user, string theStatus)
         {
             try
             {
-                using (var scope = new TransactionScope())
+                using (var db = new DataContext())
                 {
-                    using (var db = new DataContext())
+                    var statusId = 0;
+                    switch (theStatus)
                     {
-                        var statusString = "";
-                        switch (theStatus)
-                        {
-                            case "Open":
-                                statusString = _dh.GetStatuses()[1];
-                                break;
-                            case "Resolve":
-                                statusString = _dh.GetStatuses()[3];
-                                break;
-                            case "Close":
-                                statusString = _dh.GetStatuses()[4];
-                                CheckTicketOwner(ticketId, user,db);
-                                break;
-                            case "Pending":
-                                statusString = _dh.GetStatuses()[2];
-                                break;
-                            default:
-                                throw new Exception("Status is not defined");
-                        }
-
-                        var status = _gh.GetStatusId(statusString);
-                
-                        var ticket = db.Tickets.FirstOrDefault(p => p.Id == ticketId);
-                        if (ticket != null)
-                        {
-                            ticket.UpdatedAt = DateTime.Now;
-                            ticket.StatusId = status;
-                            ticket.UpdatedById = user.Id;
-                            
-                            CreateTicketDetail(ticket,user,db);
-                        }
-
-                        db.SaveChanges();
-                        scope.Complete();
-                        return _dh.ReturnJsonData(ticket, true, "Ticket has been Updated", 1);
+                        case "Open":
+                            statusId = _gh.GetStatusId(_dh.GetStatuses()[1]);
+                            break;
+                        case "Resolve":
+                            statusId = _gh.GetStatusId(_dh.GetStatuses()[3]);
+                            break;
+                        case "Close":
+                            statusId = _gh.GetStatusId(_dh.GetStatuses()[4]);
+                            CheckTicketOwner(ticketId, user, db);
+                            break;
+                        case "Pending":
+                            statusId = _gh.GetStatusId(_dh.GetStatuses()[2]);
+                            break;
+                        default:
+                            throw new Exception("Status is not defined");
                     }
+                    var ticket = db.Tickets.FirstOrDefault(p => p.Id == ticketId);
+                    if (ticket == null) throw new Exception("No Ticket Found");
+
+                    ticket.UpdatedAt = DateTime.Now;
+                    ticket.StatusId = statusId;
+                    ticket.UpdatedById = user.Id;
+
+                    CreateTicketDetail(ticket, user, db);
+
+                    db.SaveChanges();
+
+                    var tick =
+                    new TicketModel
+                    {
+                        Id = ticket.Id,
+                        Subject = ticket.Subject,
+                        Description = ticket.Description,
+                        Code = ticket.Code,
+                        Project = new Project
+                        {
+                            Id = ticket.Project.Id,
+                            Name = ticket.Project.Name,
+                            Description = ticket.Project.Description,
+                            IsActive = ticket.Project.IsActive
+                        },
+                        //ProjectId = ticket.ProjectId,
+                        Type = new Type
+                        {
+                            Id = ticket.Type.Id,
+                            Name = ticket.Type.Name,
+                            Description = ticket.Type.Description
+                        },
+                        //TypeId = ticket.TypeId,
+                        Status = new Status
+                        {
+                            Id = ticket.Status.Id,
+                            Name = ticket.Status.Name,
+                            Description = ticket.Status.Description
+                        },
+                        Priority = new Priority
+                        {
+                            Id = ticket.Priority.Id,
+                            Name = ticket.Priority.Name,
+                            Description = ticket.Priority.Description
+                        },
+                        //StatusId = ticket.StatusId,
+                        //PriorityId = ticket.PriorityId,
+                        ParentTicketId = ticket.ParentTicketId,
+                        AssignedTo = new User
+                        {
+                            Id = ticket.AssignedTo.Id,
+                            UserName = ticket.AssignedTo.UserName,
+                            FullName = ticket.AssignedTo.FullName,
+                            Email = ticket.AssignedTo.Email,
+                            PhoneNumber = ticket.AssignedTo.PhoneNumber,
+                            Picture = ticket.AssignedTo.Picture,
+                            DateOfBirth = ticket.AssignedTo.DateOfBirth
+                        },
+                        //AssignedToId = ticket.AssignedToId,
+                        AssignedBy = new User
+                        {
+                            Id = ticket.AssignedBy.Id,
+                            UserName = ticket.AssignedBy.UserName,
+                            FullName = ticket.AssignedBy.FullName,
+                            Email = ticket.AssignedBy.Email,
+                            PhoneNumber = ticket.AssignedBy.PhoneNumber,
+                            Picture = ticket.AssignedBy.Picture,
+                            DateOfBirth = ticket.AssignedBy.DateOfBirth
+                        },
+                        CreatedAt = ticket.CreatedAt,
+                        TicketDetail = GetTicketDetails(ticket.Id, db).ToList(),
+                        Comments = GetTicketComments(ticket.Id, db).ToList()
+                        //AssignedById = ticket.AssignedById
+
+                    };
+                    return _dh.ReturnJsonData(tick, true, "Ticket has been Updated", 1);
                 }
             }
             catch (Exception e)
@@ -327,7 +410,41 @@ namespace HelpDesk.Classes.Repositories
         public void CheckTicketOwner(int ticketId, User user, DataContext db)
         {
             var ticket = db.Tickets.FirstOrDefault(p => p.Id == ticketId);
-            if ( ticket != null && ticket.CreatedById != user.Id) throw new Exception("You cannot close the ticket because you did not create it");
+            if (ticket != null && ticket.CreatedById != user.Id)
+                throw new Exception("You cannot close the ticket because you did not create it");
+        }
+
+        public JsonData Comment(CommentViewModel newRecord, User user)
+        {
+            try
+            {
+                using (var db = new DataContext())
+                {
+                    if (newRecord == null) throw new ArgumentNullException("The new" + " record is null");
+
+                    var newcomment = new TicketComment
+                    {
+                        TicketId = newRecord.TicketId,
+                        Comment = newRecord.Comment,
+                        UpdatedAt = DateTime.Now,
+                        CreatedAt = DateTime.Now,
+                        CreatedById = user.Id,
+                        UpdatedById = user.Id,
+                        IsDeleted = false
+                    };
+
+                    db.TicketComments.Add(newcomment);
+                    db.SaveChanges();
+
+                    return GetAll(new Filter {TicketId = newRecord.TicketId}, user);
+
+                    //return _dh.ReturnJsonData(newcomment, true, "Comment Noted", 1);
+                }
+            }
+            catch (Exception e)
+            {
+                return _dh.ExceptionProcessor(e);
+            }
         }
     }
 }

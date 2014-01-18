@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
+using System.Web.Helpers;
 using HelpDesk.Models;
-using NLog;
+using WebGrease;
 
 namespace HelpDesk.Classes.Helpers
 {
@@ -54,12 +55,13 @@ namespace HelpDesk.Classes.Helpers
             yield return exception.Message;
         }
 
-        public List<Object> FilterData(List<Object> data, Filter filters)
+        /*public Json FilterData(Json data, Filter filters, string model)
         {
+            if (data == null) return null;
             // filter the data here
 
             return data;
-        }
+        }*/
 
         public List<string> GetRoles()
         {

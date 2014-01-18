@@ -7,13 +7,13 @@ namespace HelpDesk.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.0.1-21010")]
-    public sealed partial class EditedTicketsAndTicketDetails : IMigrationMetadata
+    public sealed partial class FirstMigration : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(EditedTicketsAndTicketDetails));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(FirstMigration));
         
         string IMigrationMetadata.Id
         {
-            get { return "201401132207235_EditedTicketsAndTicketDetails"; }
+            get { return "201401161313178_FirstMigration"; }
         }
         
         string IMigrationMetadata.Source
