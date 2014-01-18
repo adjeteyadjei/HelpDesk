@@ -1,5 +1,3 @@
-using System.Threading.Tasks;
-using HelpDesk.Classes.Helpers;
 using HelpDesk.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -7,13 +5,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace HelpDesk.Migrations
 {
     using System;
-    using System.Data.Entity;
     using System.Data.Entity.Migrations;
-    using System.Linq;
 
     internal sealed class Configuration : DbMigrationsConfiguration<DataContext>
     {
-        private readonly SecurityHelpers _sh = new SecurityHelpers();
         public static DataContext MyContext = new DataContext();
 
         public Configuration()

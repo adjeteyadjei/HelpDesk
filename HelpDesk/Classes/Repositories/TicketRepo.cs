@@ -149,17 +149,13 @@ namespace HelpDesk.Classes.Repositories
                 using (var db = new DataContext())
                 {
                     var ts = db.Tickets.Where(p => p.IsDeleted == false);
-                    if (filters != null && filters.ProjectId != 0)
-                    {
-                        ts = ts.Where(p => p.ProjectId == filters.ProjectId);
-                    }
                     var message = " No ticket found";
                     if (!ts.Any()) return _dh.ReturnJsonData(null, false, message, 0);
 
                     var data = new List<TicketModel>();
                     data.Clear();
 
-                    var tickets = ts.ToList();
+                    var tickets = FilterTickets(ts.ToList(), filters, user, db);
                     data.AddRange(tickets.Select(ticket => new TicketModel
                     {
                         Id = ticket.Id,
@@ -219,12 +215,12 @@ namespace HelpDesk.Classes.Repositories
                         },
                         CreatedAt = ticket.CreatedAt,
                         TicketDetail = GetTicketDetails(ticket.Id, db).ToList(),
-                        Comments = GetTicketComments(ticket.Id, db).ToList()
+                        Comments = GetTicketComments(ticket.Id, db).ToList() 
                         //AssignedById = ticket.AssignedById
 
                     }));
                     message = "Tickets loaded successfully";
-                    return _dh.ReturnJsonData(data, true, message, tickets.Count());
+                    return _dh.ReturnJsonData(data, true, message, data.Count());
                 }
             }
             catch (Exception e)
@@ -278,8 +274,10 @@ namespace HelpDesk.Classes.Repositories
 
         public CommentViewModel[] GetTicketComments(int ticketId, DataContext db)
         {
+            var data = new List<CommentViewModel>();
+            data.Clear();
             var comments = db.TicketComments.Where(p => p.IsDeleted == false && p.TicketId == ticketId).ToList();
-            if (!comments.Any()) return null;
+            if (!comments.Any()) return data.ToArray();
             return comments.Select(
                 comment => new CommentViewModel
                 {
@@ -445,6 +443,30 @@ namespace HelpDesk.Classes.Repositories
             {
                 return _dh.ExceptionProcessor(e);
             }
+        }
+
+        public List<Ticket> FilterTickets(List<Ticket> tickets, Filter filters, User user, DataContext db)
+        {
+            var firstOrDefault = db.TeamMembers.FirstOrDefault(p => p.UserId == user.Id && p.IsDeleted == false);
+            if (firstOrDefault != null)
+            {
+                var team = firstOrDefault.Team;
+                var teamProjects = db.ProjectTeams.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList();
+                tickets = teamProjects.Aggregate(tickets, (current, teamProject) => current.Where(p => p.ProjectId == teamProject.ProjectId).ToList());
+            }
+
+            if (filters != null && filters.ProjectId != 0)
+            {
+                tickets = tickets.Where(p => p.ProjectId == filters.ProjectId).ToList();
+            }
+
+            if (filters != null && filters.TicketId != 0)
+            {
+                tickets = tickets.Where(p => p.Id == filters.TicketId).ToList();
+            }
+
+
+            return tickets;
         }
     }
 }

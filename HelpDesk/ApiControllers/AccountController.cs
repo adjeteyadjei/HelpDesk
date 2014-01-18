@@ -465,6 +465,15 @@ namespace HelpDesk.ApiControllers
                     newUsers = users;
                 }
             }
+
+
+            var firstOrDefault = db.TeamMembers.FirstOrDefault(p => p.UserId == currentUser.Id && p.IsDeleted == false);
+            if (firstOrDefault == null) return newUsers;
+            var team = firstOrDefault.Team;
+            var data = new List<User>();
+            data.Clear();
+            var teamMembers = db.TeamMembers.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList();
+            data.AddRange(teamMembers.Select(teamMember => newUsers.FirstOrDefault(p => p.Id == teamMember.UserId)));
             return newUsers;
         }
 
@@ -487,6 +496,14 @@ namespace HelpDesk.ApiControllers
                     newUsers = users;
                 }
             }
+
+            var firstOrDefault = db.TeamMembers.FirstOrDefault(p => p.UserId == currentUser.Id && p.IsDeleted == false);
+            if (firstOrDefault == null) return newUsers;
+            var team = firstOrDefault.Team;
+            var data = new List<User>();
+            data.Clear();
+            var teamMembers = db.TeamMembers.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList();
+            data.AddRange(teamMembers.Select(teamMember => newUsers.FirstOrDefault(p => p.Id == teamMember.UserId)));
             return newUsers;
         }
 

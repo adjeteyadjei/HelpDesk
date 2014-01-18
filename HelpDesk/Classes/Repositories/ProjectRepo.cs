@@ -192,17 +192,13 @@ namespace HelpDesk.Classes.Repositories
             {
                 using (var db = new DataContext())
                 {
+                    var projects = db.Projects.Where(p => p.IsDeleted == false);
+                    var message = "No Project was Found";
+                    if (!projects.Any()) return _dh.ReturnJsonData(null, false, message, 0);
+                    
                     var data = new List<ProjectModel>();
                     data.Clear();
-                    var projects = db.Projects.Where(p => p.IsDeleted == false);
-                    if (filters != null && filters.ProjectId != 0)
-                    {
-                        projects = projects.Where(p => p.Id == filters.ProjectId);
-                    }
-                    var ps = projects.ToList();
-                    var total = ps.Count();
-                    var message = "No Project was Found";
-                    if (total <= 0) return _dh.ReturnJsonData(data, false, message, total);
+                    var ps = FilterProjects(projects.ToList(), filters, user, db);
                     data.AddRange(ps.Select(project => new ProjectModel
                     {
                         ProjectId = project.Id,
@@ -214,7 +210,7 @@ namespace HelpDesk.Classes.Repositories
                         Leaders = GetProjectLeaders(project.Id,db),
                     }));
                     message = "Projects loaded successfully";
-                    return _dh.ReturnJsonData(data, true, message, total);
+                    return _dh.ReturnJsonData(data, true, message, data.Count());
                 }
             }
             catch (Exception e)
@@ -302,7 +298,30 @@ namespace HelpDesk.Classes.Repositories
             }
         }
 
-        
+        public List<Project> FilterProjects(List<Project> projects, Filter filters, User user, DataContext db)
+        {
+            var firstOrDefault = db.TeamMembers.FirstOrDefault(p => p.UserId == user.Id && p.IsDeleted == false);
+            if (firstOrDefault != null)
+            {
+                var team = firstOrDefault.Team;
+                var data = new List<Project>();
+                    data.Clear();
+                var teamProjects = db.ProjectTeams.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList();
+                /*foreach (var teamProject in teamProjects)
+                {
+                    data.AddRange(projects.Where(p=>p.Id == teamProject.ProjectId).ToList());
+                }*/
+                projects = teamProjects.Aggregate(projects, (current, teamProject) => current.Where(p =>
+                    p.Id == teamProject.ProjectId).ToList());
+            }
+
+            if (filters != null && filters.ProjectId != 0)
+            {
+                projects = projects.Where(p => p.Id == filters.ProjectId).ToList();
+            }
+
+            return projects;
+        }
 
         
     }
