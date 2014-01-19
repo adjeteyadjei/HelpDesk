@@ -27,6 +27,7 @@ namespace HelpDesk.Classes.Helpers
         }
 
         public UserManager<User> UserManager { get; private set; }
+        
         public async Task<User> GetUser(string userId)
         {
             var currentUser = await UserManager.FindByIdAsync(userId);
