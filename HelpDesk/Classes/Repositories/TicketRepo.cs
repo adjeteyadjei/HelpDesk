@@ -307,9 +307,11 @@ namespace HelpDesk.Classes.Repositories
                     {
                         case "Open":
                             statusId = _gh.GetStatusId(_dh.GetStatuses()[1]);
+                            CheckAssignedTo(ticketId, user, db,"Open");
                             break;
                         case "Resolve":
                             statusId = _gh.GetStatusId(_dh.GetStatuses()[3]);
+                            CheckAssignedTo(ticketId, user, db,"Resolve");
                             break;
                         case "Close":
                             statusId = _gh.GetStatusId(_dh.GetStatuses()[4]);
@@ -410,6 +412,13 @@ namespace HelpDesk.Classes.Repositories
             var ticket = db.Tickets.FirstOrDefault(p => p.Id == ticketId);
             if (ticket != null && ticket.CreatedById != user.Id)
                 throw new Exception("You cannot close the ticket because you did not create it");
+        }
+
+        public void CheckAssignedTo(int ticketId, User user, DataContext db,string msg)
+        {
+            var ticket = db.Tickets.FirstOrDefault(p => p.Id == ticketId);
+            if (ticket != null && ticket.AssignedToId != user.Id)
+                throw new Exception("This ticket is not assigned to you. <br/> You cannot "+msg+" it.");
         }
 
         public JsonData Comment(CommentViewModel newRecord, User user)

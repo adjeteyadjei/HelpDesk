@@ -36,8 +36,3 @@ public class ChangePasswordModel
         public string ConfirmPassword { get; set; }
     }
 	
-	
-5. To Logout = "account/signoff"						GET
-
-6. Users = "api/account/users" 			
-

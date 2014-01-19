@@ -7,15 +7,20 @@ app.controller("DashboardController", ['$scope', '$http', function DashboardCont
     $scope.activities = [];
 
     function ticketStatistics() {
-        $scope.ticketStats = { New: 9, Open: 20, Pending: 12, Solved: 0 };
+        $scope.ticketStats = {
+            New: [],
+            Open: [],
+            Pending: [],
+            Solved: []
+        };
     }
 
     function recentActivities() {
         $scope.activities = [
-            { Agent: "Adjetey", Action: "added a note to the ticket", TicketCode: "#241B", CreatedAt: "2 minutes ago" },
+            /*{ Agent: "Adjetey", Action: "added a note to the ticket", TicketCode: "#241B", CreatedAt: "2 minutes ago" },
             { Agent: "Edwin", Action: "Solved your ticket", TicketCode: "#102W", CreatedAt: "12 minutes ago" },
             { Agent: "Samuel", Action: "closed ticket", TicketCode: "#313S", CreatedAt: "1 hour ago" },
-            { Agent: "Ebo", Action: "fowarded your ticket at Axon", TicketCode: "#510N", CreatedAt: "10 seconds ago" }
+            { Agent: "Ebo", Action: "fowarded your ticket at Axon", TicketCode: "#510N", CreatedAt: "10 seconds ago" }*/
         ];
     }
 

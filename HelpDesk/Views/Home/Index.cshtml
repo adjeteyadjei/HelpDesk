@@ -27,6 +27,7 @@
                                 <div class="activity_time">{{activity.CreatedAt}}</div>
                             </div>
                         </li>
+                        <li ng-hide="activities" style="border: none; padding: 0px;"><h4>No recent activities.</h4></li>
                     </ul>
                 </div>
             </div>
@@ -42,22 +43,22 @@
                             <ul>
 
                                 <li ng-click="showtickets('New')" class="clickable" ng-class="{active : activeClass == 'New'}">
-                                    <div class="cell-value">{{ticketStats.New}}</div>
+                                    <div class="cell-value">{{ticketStats.New.length}}</div>
                                     <div class="cell-title"><span>New</span></div>
                                 </li>
 
                                 <li ng-click="showtickets('Open')" class="clickable" ng-class="{active : activeClass == 'Open'}">
-                                    <div class="cell-value">{{ticketStats.Open}}</div>
+                                    <div class="cell-value">{{ticketStats.Open.length}}</div>
                                     <div class="cell-title"><span>Open</span></div>
                                 </li>
 
                                 <li ng-click="showtickets('Pending')" class="clickable" ng-class="{active : activeClass == 'Pending'}">
-                                    <div class="cell-value">{{ticketStats.Pending}}</div>
+                                    <div class="cell-value">{{ticketStats.Pending.length}}</div>
                                     <div class="cell-title"><span>Pending</span></div>
                                 </li>
 
                                 <li ng-click="showtickets('Solved')" class="clickable" ng-class="{active : activeClass == 'Solved'}">
-                                    <div class="cell-value">{{ticketStats.Solved}}</div>
+                                    <div class="cell-value">{{ticketStats.Solved.length}}</div>
                                     <div class="cell-title"><span>Solved</span></div>
                                 </li>
 
@@ -69,34 +70,31 @@
             </div>
             <div class="panel panel-primary" style="margin-top: 15px;">
                 <div class="panel-heading">{{activeClass}} Tickets</div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table table-condensed">
-                            <thead>
-                                <tr ng-show="ticketTitle">
-                                    <th>{{ticketTitle}}</th>
-                                </tr>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Subject</th>
-                                    <th>Date</th>
-                                    <th>Priority</th>
-                                    <th>Ticket By</th>
-                                    <th>Agent</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr ng-repeat="ticket in tickets">
-                                    <td>{{ticket.Code}}</td>
-                                    <td>{{ticket.Subject}}</td>
-                                    <td>{{ticket.CreatedAt}}</td>
-                                    <td>{{ticket.Priority}}</td>
-                                    <td>{{ticket.CreatedBy}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
+                <div class="table-responsive">
+                    <table class="table table-condensed">
+                        <thead>
+                            <tr ng-show="ticketTitle">
+                                <th>{{ticketTitle}}</th>
+                            </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>Subject</th>
+                                <th>Date</th>
+                                <th>Priority</th>
+                                <th>Ticket By</th>
+                                <th>Agent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="ticket in tickets">
+                                <td>{{ticket.Code}}</td>
+                                <td>{{ticket.Subject}}</td>
+                                <td>{{ticket.CreatedAt}}</td>
+                                <td>{{ticket.Priority}}</td>
+                                <td>{{ticket.CreatedBy}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
             </div>

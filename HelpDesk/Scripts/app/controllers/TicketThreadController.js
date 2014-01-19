@@ -20,7 +20,6 @@ app.controller("TicketThreadController", ['$scope', '$http', 'Ticket', 'MsgBox',
     $scope.postComment = function (comment) {
         if ($scope.newTicket.Id) {
             var commentObj = { 'TicketId': $scope.newTicket.Id, 'Comment': comment };
-            console.log(commentObj);
             $http.put('/api/ticket/comment', commentObj).success(function(res) {
                 afterSave(res);
             });

@@ -26,28 +26,28 @@
                 </li>
             </ol>
 
-            @*<ol class="conversation_thread" id="all_notes">
-                    <li class="conversation ">
-                        <div class="avatar-wrap">
-                            <div class="preview_pic">
-                                <img alt=""  src="/Content/img/profile_blank_thumb.gif">
+            <ol class="conversation_thread" id="all_notes" ng-repeat="comment in newTicket.Comments">
+                <li class="conversation ">
+                    <div class="avatar-wrap">
+                        <div class="preview_pic">
+                            <img alt="" src="/Content/img/profile_blank_thumb.gif">
+                        </div>
+                    </div>
+                    <div class="commentbox commentbox-gray">
+                        <div class="">
+                            <div class="author-mail-detail">
+                                <strong class="username">{{comment.CreatedBy.FullName}}</strong> commented on {{comment.CreatedAt | date:'dd MMMM yyyy - h:mm:a'}}
+                            </div>
+
+                            <div class="details">
+                                {{comment.Comment}}
                             </div>
                         </div>
-                        <div class="commentbox commentbox-gray">
-                            <div class="helpdesk_note">
-                                <div class="author-mail-detail">
-                                    <strong class="username">Adjetey</strong> commented on Sunday, 3rd November 2013 at 1:30 PM
-                                </div>
+                    </div>
 
-                                <div class="details">
-                                    Hi, Racheal
-                                </div>
-                            </div>
-                        </div>
+                </li>
 
-                    </li>
-
-                </ol>*@
+            </ol>
 
             <ol class="redactor conversation_thread">
                 <li class="conversation">

@@ -32,9 +32,7 @@ namespace HelpDesk.ApiControllers
                     false
             };
         }
-
         public UserManager<User> UserManager { get; private set; }
-
 
         // GET security/signin
         [Route("api/account/signin")]
@@ -102,7 +100,7 @@ namespace HelpDesk.ApiControllers
 
                         var currentUserRoles = currentUser.Roles.ToList();
 
-                        var roleName = GetNewUsersRole(model, currentUserRoles);
+                        var roleName = GetNewUsersRole(model);
 
                         if (!ModelState.IsValid) throw new Exception("Please check the registration details");
 
@@ -142,7 +140,7 @@ namespace HelpDesk.ApiControllers
             }
         }
 
-        public string GetNewUsersRole(UserModel newRecord, List<IdentityUserRole> roles)
+        public string GetNewUsersRole(UserModel newRecord)
         {
             var allRoles = _dh.GetRoles();
 
@@ -169,15 +167,29 @@ namespace HelpDesk.ApiControllers
                         }
                     };
 
-                    var currentUser = userManager.FindByName(User.Identity.Name);
+                    //var currentUser = await userManager.FindByIdAsync(User.Identity.GetUserId());
 
-                    var currentUserRoles = currentUser.Roles.ToList();
+                    //var currentUserRoles = currentUser.Roles.ToList();
 
-                    var roleName = GetNewUsersRole(model, currentUserRoles);
+                    var roleName = GetNewUsersRole(model);
 
                     if (!ModelState.IsValid) throw new Exception("Please check the registration details");
 
-                    var user = new User
+                    var us = myContext.Users.FirstOrDefault(p => p.Id == model.UserId);
+
+                    //us.Id = model.Id;
+                    //us.UserName = model.UserName;
+                    us.FullName = model.FullName;
+                    us.Email = model.Email;
+                    us.PhoneNumber = model.PhoneNumber;
+                    us.Picture = model.Picture;
+                    us.DateOfBirth = model.DateOfBirth;
+                    us.IsDeleted = false;
+                    us.UpdatedAt = DateTime.Now;
+
+                    myContext.SaveChanges();
+
+                    /*var user = new User
                     {
                         Id = model.Id,
                         UserName = model.UserName,
@@ -191,20 +203,20 @@ namespace HelpDesk.ApiControllers
 
                     };
                     var result = await userManager.UpdateAsync(user);
-                    if (!result.Succeeded) throw new Exception(string.Join(", ", result.Errors));
+                    if (!result.Succeeded) throw new Exception(string.Join(", ", result.Errors));*/
 
-                    var roles = await userManager.GetRolesAsync(user.Id);
+                    var roles = await userManager.GetRolesAsync(us.Id);
 
                     foreach (var role in roles)
                     {
-                        await userManager.RemoveFromRoleAsync(user.Id, role);
+                        await userManager.RemoveFromRoleAsync(us.Id, role);
                     }
 
-                    userManager.AddToRole(user.Id, roleName);
+                    userManager.AddToRole(us.Id, roleName);
 
                     myContext.SaveChanges();
                     //scope.Complete();
-                    return _dh.ReturnJsonData(user, true, "User has been updated");
+                    return _dh.ReturnJsonData(us, true, "User has been updated");
                 }
                 //}
             }
@@ -233,13 +245,20 @@ namespace HelpDesk.ApiControllers
                         }
                     };
 
-                    var currentUser = userManager.FindByName(User.Identity.Name);
+                    //var currentUser = userManager.FindByName(User.Identity.Name);
 
-                    var currentUserRoles = currentUser.Roles.ToList();
+                    //var currentUserRoles = currentUser.Roles.ToList();
 
-                    var roleName = GetNewUsersRole(model, currentUserRoles);
+                    var roleName = GetNewUsersRole(model);
 
                     if (!ModelState.IsValid) throw new Exception("Please check the registration details");
+
+                    var roles = await userManager.GetRolesAsync(model.UserId);
+
+                    foreach (var role in roles)
+                    {
+                        await userManager.RemoveFromRoleAsync(model.UserId, role);
+                    }
 
                     var user = new User
                     {
@@ -254,19 +273,13 @@ namespace HelpDesk.ApiControllers
                         UpdatedAt = DateTime.Now
 
                     };
-                    //var result = await userManager.UpdateAsync(user);
-                    //if (!result.Succeeded) throw new Exception(string.Join(", ", result.Errors));
+                    var result = await userManager.RemovePasswordAsync(user.Id);
+                    if (!result.Succeeded) throw new Exception(string.Join(", ", result.Errors));
 
-                    var roles = await userManager.GetRolesAsync(user.Id);
+                    var aa = myContext.Users.Remove(user);
+                    myContext.SaveChanges();
 
-                    /*foreach (var role in roles)
-                    {
-                        await userManager.RemoveFromRoleAsync(user.Id, role);
-                    }
-
-                    userManager.AddToRole(user.Id, roleName);
-
-                    myContext.SaveChanges();*/
+                    myContext.SaveChanges();
                     scope.Complete();
                     return _dh.ReturnJsonData(user, true, "User has been updated");
                 }
@@ -352,23 +365,17 @@ namespace HelpDesk.ApiControllers
             try
             {
                 var currentUser = _sh.GetUserWithName(User.Identity.Name);
-                var currentUserRoles = currentUser.Roles.Select(x=>x.Role.Name).ToList();
-                var allRoles = _dh.GetRoles();
-
                 using (var db = new DataContext())
                 {
-                    var data = new List<UserModel>();
-                    data.Clear();
-
                     var users = db.Users.ToList();
+                    var message = "No User Found";
+                    if (!users.Any()) return _dh.ReturnJsonData(null, false, message, 0);
 
                     //filter the users with a condition
                     users = FilterUsers(users, currentUser, db);
+                    var data = new List<UserModel>();
+                    data.Clear();
 
-                    var total = users.Count();
-                    var message = "No User Found";
-                    if (total <= 0) return _dh.ReturnJsonData(null, false, message, total);
-                    
                     data.AddRange(users.Select(user => new UserModel
                     {
                         Team = GetUserTeam(user.Id,db),
@@ -387,7 +394,7 @@ namespace HelpDesk.ApiControllers
                     }));
                     
                     message = "Users loaded successfully";
-                    return _dh.ReturnJsonData(data, true, message, total);
+                    return _dh.ReturnJsonData(data, true, message, data.Count());
                 }
             }
             catch (Exception e)
@@ -455,9 +462,10 @@ namespace HelpDesk.ApiControllers
 
             foreach (var role in roles)
             {
-                if (role != allRoles[1])
+                if (role != allRoles[0] && role != allRoles[1])
                 {
                     var leader = db.TeamMembers.FirstOrDefault(x => x.UserId == currentUser.Id && !x.IsDeleted);
+                    if (leader == null) return newUsers;
                     newUsers = db.TeamMembers.Where(x => x.TeamId == leader.TeamId).Select(x => x.User).ToList();
                 }
                 else
@@ -486,7 +494,7 @@ namespace HelpDesk.ApiControllers
 
             foreach (var role in roles)
             {
-                if (role != allRoles[1])
+                if (role != allRoles[0] || role != allRoles[1])
                 {
                     var leader = db.TeamMembers.FirstOrDefault(x => x.UserId == currentUser.Id && !x.IsDeleted);
                     newUsers = db.TeamMembers.Where(x => x.TeamId == leader.TeamId).Select(x => x.User).ToList();
