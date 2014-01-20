@@ -108,6 +108,7 @@ app.controller("TicketThreadController", ['$scope', '$http', 'Ticket', 'MsgBox',
         if (res.success) {
             MsgBox.success(res.message);
             $scope.newTicket = res.data;
+            $scope.comment = "";
         } else {
             MsgBox.success(res.message);
         }
@@ -117,7 +118,13 @@ app.controller("TicketThreadController", ['$scope', '$http', 'Ticket', 'MsgBox',
         var code = $("#ticket_code").val();
         if (code) {
             $http.get("/api/ticket/open?TicketId=" + code).success(function (res) {
-                $scope.newTicket = res.data;
+                if (res.success) {
+                    $scope.newTicket = res.data;
+                }else {
+                    MsgBox.notice(res.message);
+                    $scope.newTicket = {};
+                }
+                
             });
         }
     }

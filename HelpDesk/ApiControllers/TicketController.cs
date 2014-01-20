@@ -1,4 +1,6 @@
-﻿using System.Web.Http;
+﻿using System;
+using System.Collections.Generic;
+using System.Web.Http;
 using HelpDesk.Classes.Helpers;
 using HelpDesk.Classes.Repositories;
 using HelpDesk.Models;
@@ -12,6 +14,7 @@ namespace HelpDesk.ApiControllers
     {
         private readonly TicketRepo _repo = new TicketRepo();
         public static DataContext MyContext = new DataContext();
+
         public TicketController()
             : this(new UserManager<User>(new UserStore<User>(MyContext)))
         {
@@ -27,7 +30,7 @@ namespace HelpDesk.ApiControllers
         public JsonData Get(Filter filters)
         {
             var user = UserManager.FindByName(User.Identity.Name);
-            return _repo.GetAll(filters,user);
+            return _repo.GetAll(filters, user);
         }
 
         public JsonData Post(TicketModel clientData)
@@ -85,6 +88,27 @@ namespace HelpDesk.ApiControllers
             return _repo.Comment(comment, user);
         }
 
+        [Route("api/dashboard/summaries")]
+        [HttpGet]
+        [Authorize]
+        public JsonData Dashboard()
+        {
+            var dh = new DataHelpers();
+            try
+            {
+                
+                var dash = new DashboardModel();
+                var user = UserManager.FindByName(User.Identity.Name);
+                //var user = UserManager.FindByName("administrator");
+                dash.Activities = _repo.GetTicketActivities(user);
+                dash.TicketStats = (List<TicketModel>)_repo.GetAll(new Filter {}, user).data;
 
+                return dh.ReturnJsonData(dash, true, "Dashboard data loaded", 1);
+            }
+            catch (Exception e)
+            {
+                return dh.ExceptionProcessor(e);
+            }
+        }
     }
 }

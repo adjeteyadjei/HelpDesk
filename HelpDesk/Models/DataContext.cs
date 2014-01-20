@@ -29,6 +29,7 @@ namespace HelpDesk.Models
         public DbSet<TicketDetail> TicketDetails { get; set; }
         public DbSet<ProjectLeader> ProjectLeaders { get; set; }
         public DbSet<TicketComment> TicketComments { get; set; }
+        public DbSet<TicketActivity> TicketActivities { get; set; }
 
         /*protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

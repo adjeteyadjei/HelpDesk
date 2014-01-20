@@ -233,6 +233,10 @@
     <Compile Include="Migrations\201401181942187_FirstMigration.Designer.cs">
       <DependentUpon>201401181942187_FirstMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201401200009147_AddedTicketActivityModel.cs" />
+    <Compile Include="Migrations\201401200009147_AddedTicketActivityModel.Designer.cs">
+      <DependentUpon>201401200009147_AddedTicketActivityModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AuditFileds.cs" />
@@ -248,6 +252,7 @@
     <Compile Include="Models\RolePermission.cs" />
     <Compile Include="Models\TeamRelation.cs" />
     <Compile Include="Models\Ticket.cs" />
+    <Compile Include="Models\TicketActivities.cs" />
     <Compile Include="Models\TicketDetail.cs" />
     <Compile Include="Models\TicketModel.cs" />
     <Compile Include="Models\User.cs" />
@@ -717,6 +722,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201401181942187_FirstMigration.resx">
       <DependentUpon>201401181942187_FirstMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401200009147_AddedTicketActivityModel.resx">
+      <DependentUpon>201401200009147_AddedTicketActivityModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

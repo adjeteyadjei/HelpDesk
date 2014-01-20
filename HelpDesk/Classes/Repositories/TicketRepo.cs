@@ -48,6 +48,7 @@ namespace HelpDesk.Classes.Repositories
                         db.Tickets.Add(newTicket);
 
                         CreateTicketDetail(newTicket, user, db);
+                        CreateTicketActivity("Created a new ticket", newTicket.Id, user.Id, db);
                         db.SaveChanges();
                         scope.Complete();
 
@@ -104,6 +105,7 @@ namespace HelpDesk.Classes.Repositories
                         oRecord.UpdatedAt = DateTime.Now;
 
                         CreateTicketDetail(oRecord, user, db);
+                        CreateTicketActivity("Updated the ticket", oRecord.Id, user.Id, db);
                         db.SaveChanges();
                         scope.Complete();
                         return _dh.ReturnJsonData(oRecord, true, "Ticket record has been successfully updated", 1);
@@ -148,7 +150,8 @@ namespace HelpDesk.Classes.Repositories
             {
                 using (var db = new DataContext())
                 {
-                    var ts = db.Tickets.Where(p => p.IsDeleted == false);
+                    var closedStatusId = _gh.GetStatusId(_dh.GetStatuses()[4]);
+                    var ts = db.Tickets.Where(p => p.IsDeleted == false && p.StatusId != closedStatusId);
                     var message = " No ticket found";
                     if (!ts.Any()) return _dh.ReturnJsonData(null, false, message, 0);
 
@@ -232,44 +235,44 @@ namespace HelpDesk.Classes.Repositories
         public TicketDetail[] GetTicketDetails(int ticketId, DataContext db)
         {
             var details = db.TicketDetails.Where(p => p.IsDeleted == false && p.TicketId == ticketId).ToList();
-                return details.Select(
-                    detail => new TicketDetail
+            return details.Select(
+                detail => new TicketDetail
+                {
+                    Code = detail.Code,
+                    Status = new Status
                     {
-                        Code = detail.Code,
-                        Status = new Status
-                        {
-                            Id = detail.Status.Id,
-                            Name = detail.Status.Name,
-                            Description = detail.Status.Description
-                        },
-                        Priority = new Priority
-                        {
-                            Id = detail.Priority.Id,
-                            Name = detail.Priority.Name,
-                            Description = detail.Priority.Description
-                        },
-                        AssignedTo = new User
-                        {
-                            Id = detail.AssignedTo.Id,
-                            UserName = detail.AssignedTo.UserName,
-                            FullName = detail.AssignedTo.FullName,
-                            Email = detail.AssignedTo.Email,
-                            PhoneNumber = detail.AssignedTo.PhoneNumber,
-                            Picture = detail.AssignedTo.Picture,
-                            DateOfBirth = detail.AssignedTo.DateOfBirth
-                        },
-                        AssignedBy = new User
-                        {
-                            Id = detail.AssignedBy.Id,
-                            UserName = detail.AssignedBy.UserName,
-                            FullName = detail.AssignedBy.FullName,
-                            Email = detail.AssignedBy.Email,
-                            PhoneNumber = detail.AssignedBy.PhoneNumber,
-                            Picture = detail.AssignedBy.Picture,
-                            DateOfBirth = detail.AssignedBy.DateOfBirth
-                        } /**/
-                    }).ToArray();
-            
+                        Id = detail.Status.Id,
+                        Name = detail.Status.Name,
+                        Description = detail.Status.Description
+                    },
+                    Priority = new Priority
+                    {
+                        Id = detail.Priority.Id,
+                        Name = detail.Priority.Name,
+                        Description = detail.Priority.Description
+                    },
+                    AssignedTo = new User
+                    {
+                        Id = detail.AssignedTo.Id,
+                        UserName = detail.AssignedTo.UserName,
+                        FullName = detail.AssignedTo.FullName,
+                        Email = detail.AssignedTo.Email,
+                        PhoneNumber = detail.AssignedTo.PhoneNumber,
+                        Picture = detail.AssignedTo.Picture,
+                        DateOfBirth = detail.AssignedTo.DateOfBirth
+                    },
+                    AssignedBy = new User
+                    {
+                        Id = detail.AssignedBy.Id,
+                        UserName = detail.AssignedBy.UserName,
+                        FullName = detail.AssignedBy.FullName,
+                        Email = detail.AssignedBy.Email,
+                        PhoneNumber = detail.AssignedBy.PhoneNumber,
+                        Picture = detail.AssignedBy.Picture,
+                        DateOfBirth = detail.AssignedBy.DateOfBirth
+                    } /**/
+                }).ToArray();
+
         }
 
         public CommentViewModel[] GetTicketComments(int ticketId, DataContext db)
@@ -303,19 +306,23 @@ namespace HelpDesk.Classes.Repositories
                 using (var db = new DataContext())
                 {
                     var statusId = 0;
+                    var action = "";
                     switch (theStatus)
                     {
                         case "Open":
                             statusId = _gh.GetStatusId(_dh.GetStatuses()[1]);
-                            CheckAssignedTo(ticketId, user, db,"Open");
+                            CheckAssignedTo(ticketId, user, db, "Open");
+                            action = "Opened the ticket";
                             break;
                         case "Resolve":
                             statusId = _gh.GetStatusId(_dh.GetStatuses()[3]);
-                            CheckAssignedTo(ticketId, user, db,"Resolve");
+                            CheckAssignedTo(ticketId, user, db, "Resolve");
+                            action = "Resolved the ticket";
                             break;
                         case "Close":
                             statusId = _gh.GetStatusId(_dh.GetStatuses()[4]);
                             CheckTicketOwner(ticketId, user, db);
+                            action = "Closed the ticket";
                             break;
                         case "Pending":
                             statusId = _gh.GetStatusId(_dh.GetStatuses()[2]);
@@ -331,73 +338,74 @@ namespace HelpDesk.Classes.Repositories
                     ticket.UpdatedById = user.Id;
 
                     CreateTicketDetail(ticket, user, db);
+                    CreateTicketActivity(action, ticket.Id, user.Id, db);
 
                     db.SaveChanges();
 
                     var tick =
-                    new TicketModel
-                    {
-                        Id = ticket.Id,
-                        Subject = ticket.Subject,
-                        Description = ticket.Description,
-                        Code = ticket.Code,
-                        Project = new Project
+                        new TicketModel
                         {
-                            Id = ticket.Project.Id,
-                            Name = ticket.Project.Name,
-                            Description = ticket.Project.Description,
-                            IsActive = ticket.Project.IsActive
-                        },
-                        //ProjectId = ticket.ProjectId,
-                        Type = new Type
-                        {
-                            Id = ticket.Type.Id,
-                            Name = ticket.Type.Name,
-                            Description = ticket.Type.Description
-                        },
-                        //TypeId = ticket.TypeId,
-                        Status = new Status
-                        {
-                            Id = ticket.Status.Id,
-                            Name = ticket.Status.Name,
-                            Description = ticket.Status.Description
-                        },
-                        Priority = new Priority
-                        {
-                            Id = ticket.Priority.Id,
-                            Name = ticket.Priority.Name,
-                            Description = ticket.Priority.Description
-                        },
-                        //StatusId = ticket.StatusId,
-                        //PriorityId = ticket.PriorityId,
-                        ParentTicketId = ticket.ParentTicketId,
-                        AssignedTo = new User
-                        {
-                            Id = ticket.AssignedTo.Id,
-                            UserName = ticket.AssignedTo.UserName,
-                            FullName = ticket.AssignedTo.FullName,
-                            Email = ticket.AssignedTo.Email,
-                            PhoneNumber = ticket.AssignedTo.PhoneNumber,
-                            Picture = ticket.AssignedTo.Picture,
-                            DateOfBirth = ticket.AssignedTo.DateOfBirth
-                        },
-                        //AssignedToId = ticket.AssignedToId,
-                        AssignedBy = new User
-                        {
-                            Id = ticket.AssignedBy.Id,
-                            UserName = ticket.AssignedBy.UserName,
-                            FullName = ticket.AssignedBy.FullName,
-                            Email = ticket.AssignedBy.Email,
-                            PhoneNumber = ticket.AssignedBy.PhoneNumber,
-                            Picture = ticket.AssignedBy.Picture,
-                            DateOfBirth = ticket.AssignedBy.DateOfBirth
-                        },
-                        CreatedAt = ticket.CreatedAt,
-                        TicketDetail = GetTicketDetails(ticket.Id, db).ToList(),
-                        Comments = GetTicketComments(ticket.Id, db).ToList()
-                        //AssignedById = ticket.AssignedById
+                            Id = ticket.Id,
+                            Subject = ticket.Subject,
+                            Description = ticket.Description,
+                            Code = ticket.Code,
+                            Project = new Project
+                            {
+                                Id = ticket.Project.Id,
+                                Name = ticket.Project.Name,
+                                Description = ticket.Project.Description,
+                                IsActive = ticket.Project.IsActive
+                            },
+                            //ProjectId = ticket.ProjectId,
+                            Type = new Type
+                            {
+                                Id = ticket.Type.Id,
+                                Name = ticket.Type.Name,
+                                Description = ticket.Type.Description
+                            },
+                            //TypeId = ticket.TypeId,
+                            Status = new Status
+                            {
+                                Id = ticket.Status.Id,
+                                Name = ticket.Status.Name,
+                                Description = ticket.Status.Description
+                            },
+                            Priority = new Priority
+                            {
+                                Id = ticket.Priority.Id,
+                                Name = ticket.Priority.Name,
+                                Description = ticket.Priority.Description
+                            },
+                            //StatusId = ticket.StatusId,
+                            //PriorityId = ticket.PriorityId,
+                            ParentTicketId = ticket.ParentTicketId,
+                            AssignedTo = new User
+                            {
+                                Id = ticket.AssignedTo.Id,
+                                UserName = ticket.AssignedTo.UserName,
+                                FullName = ticket.AssignedTo.FullName,
+                                Email = ticket.AssignedTo.Email,
+                                PhoneNumber = ticket.AssignedTo.PhoneNumber,
+                                Picture = ticket.AssignedTo.Picture,
+                                DateOfBirth = ticket.AssignedTo.DateOfBirth
+                            },
+                            //AssignedToId = ticket.AssignedToId,
+                            AssignedBy = new User
+                            {
+                                Id = ticket.AssignedBy.Id,
+                                UserName = ticket.AssignedBy.UserName,
+                                FullName = ticket.AssignedBy.FullName,
+                                Email = ticket.AssignedBy.Email,
+                                PhoneNumber = ticket.AssignedBy.PhoneNumber,
+                                Picture = ticket.AssignedBy.Picture,
+                                DateOfBirth = ticket.AssignedBy.DateOfBirth
+                            },
+                            CreatedAt = ticket.CreatedAt,
+                            TicketDetail = GetTicketDetails(ticket.Id, db).ToList(),
+                            Comments = GetTicketComments(ticket.Id, db).ToList()
+                            //AssignedById = ticket.AssignedById
 
-                    };
+                        };
                     return _dh.ReturnJsonData(tick, true, "Ticket has been Updated", 1);
                 }
             }
@@ -414,11 +422,11 @@ namespace HelpDesk.Classes.Repositories
                 throw new Exception("You cannot close the ticket because you did not create it");
         }
 
-        public void CheckAssignedTo(int ticketId, User user, DataContext db,string msg)
+        public void CheckAssignedTo(int ticketId, User user, DataContext db, string msg)
         {
             var ticket = db.Tickets.FirstOrDefault(p => p.Id == ticketId);
             if (ticket != null && ticket.AssignedToId != user.Id)
-                throw new Exception("This ticket is not assigned to you. <br/> You cannot "+msg+" it.");
+                throw new Exception("This ticket is not assigned to you. <br/> You cannot " + msg + " it.");
         }
 
         public JsonData Comment(CommentViewModel newRecord, User user)
@@ -443,9 +451,10 @@ namespace HelpDesk.Classes.Repositories
                     db.TicketComments.Add(newcomment);
                     db.SaveChanges();
 
-                    return GetAll(new Filter {TicketId = newRecord.TicketId}, user);
+                    var ticket = (List<TicketModel>)GetAll(new Filter {TicketId = newRecord.TicketId}, user).data;
 
-                    //return _dh.ReturnJsonData(newcomment, true, "Comment Noted", 1);
+
+                    return _dh.ReturnJsonData(ticket[0], true, "Comment Noted", 1);
                 }
             }
             catch (Exception e)
@@ -461,7 +470,8 @@ namespace HelpDesk.Classes.Repositories
             {
                 var team = firstOrDefault.Team;
                 var teamProjects = db.ProjectTeams.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList();
-                tickets = teamProjects.Aggregate(tickets, (current, teamProject) => current.Where(p => p.ProjectId == teamProject.ProjectId).ToList());
+                tickets = teamProjects.Aggregate(tickets,
+                    (current, teamProject) => current.Where(p => p.ProjectId == teamProject.ProjectId).ToList());
             }
 
             if (filters != null && filters.ProjectId != 0)
@@ -476,6 +486,100 @@ namespace HelpDesk.Classes.Repositories
 
 
             return tickets;
+        }
+
+        public void CreateTicketActivity(string action, int ticketId, string userId, DataContext db)
+        {
+            var ticketActivity = new TicketActivity
+            {
+                TicketId = ticketId,
+                AgentId = userId,
+                Action = action,
+                CreatedAt = DateTime.Now
+            };
+
+            db.TicketActivities.Add(ticketActivity);
+            db.SaveChanges();
+        }
+
+        public List<TicketActivity> GetTicketActivities(User user)
+        {
+            using (var db = new DataContext())
+            {
+                var acts = new List<TicketActivity>();
+                acts.Clear();
+                var firstOrDefault = db.TeamMembers.FirstOrDefault(p => p.UserId == user.Id && p.IsDeleted == false);
+                if (firstOrDefault == null)
+                {
+                    if (db.TicketActivities != null)
+                    {
+                        var list = db.TicketActivities.ToList();
+                        list.AddRange(acts.Select(
+                            act=> new TicketActivity
+                            {
+                               Id = act.Id,
+                               Agent = new User
+                               {
+                                   Id = act.Agent.Id,
+                                   UserName = act.Agent.UserName,
+                                   FullName = act.Agent.FullName,
+                                   Email = act.Agent.Email,
+                                   PhoneNumber = act.Agent.PhoneNumber,
+                                   Picture = act.Agent.Picture,
+                                   DateOfBirth = act.Agent.DateOfBirth
+                               },
+                               Action=act.Action,
+                               CreatedAt = act.CreatedAt,
+                               Ticket = new Ticket
+                               {
+                                   Code = act.Ticket.Code,
+                                   Subject = act.Ticket.Subject,
+                                   Description=act.Ticket.Description
+                               }
+                            }));
+                        return list;
+                    }
+                    return acts;
+                }
+                    
+
+                var team = firstOrDefault.Team;
+                var data = new List<Ticket>();
+                data.Clear();
+                var teamProjects = db.ProjectTeams.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList();
+                foreach (var teamProject in teamProjects)
+                {
+                    data.AddRange(db.Tickets.Where(p => p.ProjectId == teamProject.ProjectId).ToList());
+                }
+
+                foreach (var ticket in data)
+                {
+                    acts.AddRange(db.TicketActivities.Where(p => p.TicketId == ticket.Id).ToList().Select(
+                            act=> new TicketActivity
+                            {
+                               Id = act.Id,
+                               Agent = new User
+                               {
+                                   Id = act.Agent.Id,
+                                   UserName = act.Agent.UserName,
+                                   FullName = act.Agent.FullName,
+                                   Email = act.Agent.Email,
+                                   PhoneNumber = act.Agent.PhoneNumber,
+                                   Picture = act.Agent.Picture,
+                                   DateOfBirth = act.Agent.DateOfBirth
+                               },
+                               Action=act.Action,
+                               CreatedAt = act.CreatedAt,
+                               Ticket = new Ticket
+                               {
+                                   Code = act.Ticket.Code,
+                                   Subject = act.Ticket.Subject,
+                                   Description=act.Ticket.Description
+                               }
+                            }));
+                }
+                return acts;
+            }
         }
     }
 }

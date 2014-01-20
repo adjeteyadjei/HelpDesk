@@ -271,6 +271,7 @@
 }
 
 .ticket-list-body {
+    -ms-text-shadow: #FFF 1px 1px 0;
     text-shadow: #FFF 1px 1px 0;
     background: #FFF;
     border: #FFF solid 1px;
@@ -282,7 +283,8 @@
 }
 
 #ticket-list-body #ticket-list-body-content {
-    border: #AAA solid 1px;
+    border: #DDD solid 1px;
+    /*border-bottom: 0px;*/
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     -ms-border-radius: 5px;

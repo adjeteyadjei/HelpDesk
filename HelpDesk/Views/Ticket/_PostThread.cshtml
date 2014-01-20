@@ -1,7 +1,7 @@
 ﻿<div class="panel panel-primary">
     <div class="panel-heading">Ticket Thread</div>
     <div class="panel-body">
-        <div class="ticket_show">
+        <div class="ticket_show" ng-show="newTicket.Subject">
             <ol class="conversation_thread" id="original_request">
                 <li class="conversation">
                     <div class="avatar-wrap">
@@ -20,7 +20,7 @@
                             </div>
                         </div>
                         <div id="ticket_original_request">
-                            <div>This is the decription of the problem. Call me if you don't understand.</div>
+                            <div>{{newTicket.Description}}</div>
                         </div>
                     </div>
                 </li>

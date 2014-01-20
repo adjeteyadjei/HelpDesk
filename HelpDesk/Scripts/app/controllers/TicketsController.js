@@ -138,14 +138,14 @@ app.controller("TicketController", ['$scope', '$http', 'Ticket', 'MsgBox', 'OBJ'
         }
     }
 
-    function loadTicket() {
+    /*function loadTicket() {
         var code = $("#ticket_code").val();
         if (code) {
             $http.get("/api/ticket/" + code).success(function (res) {
                 $scope.newTicket = res.data;
             });
         }
-    }
+    }*/
     
 
     $scope.clear = function () {
@@ -158,11 +158,11 @@ app.controller("TicketController", ['$scope', '$http', 'Ticket', 'MsgBox', 'OBJ'
 
     function start() {
         getProjects();
-        getTickets();
+        //getTickets();
         getTypes();
         getPriorities();
         getAgents();
-        loadTicket();
+        //loadTicket();
     }
 
     start();
