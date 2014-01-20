@@ -31,11 +31,11 @@ namespace HelpDesk.Models
         public DbSet<TicketComment> TicketComments { get; set; }
         public DbSet<TicketActivity> TicketActivities { get; set; }
 
-        /*protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             Database.SetInitializer(new MigrateDatabaseToLatestVersion<DataContext, Configuration>());
             base.OnModelCreating(modelBuilder);
-        }*/
+        }
 
     }
 }
