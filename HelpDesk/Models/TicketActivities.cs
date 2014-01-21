@@ -14,6 +14,8 @@ namespace HelpDesk.Models
         public int TicketId { get; set; }
         public virtual Ticket Ticket { get; set; }
         public DateTime CreatedAt { get; set; }
+        public string CreatedById { get; set; }
+        public virtual User CreatedBy { get; set; }
     }
 
     public class DashboardModel

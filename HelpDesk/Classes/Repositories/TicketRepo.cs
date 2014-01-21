@@ -311,7 +311,8 @@ namespace HelpDesk.Classes.Repositories
                     {
                         case "Open":
                             statusId = _gh.GetStatusId(_dh.GetStatuses()[1]);
-                            CheckAssignedTo(ticketId, user, db, "Open");
+                            //CheckAssignedTo(ticketId, user, db, "Open");
+                            CheckTicketOwner(ticketId, user, db, "Open");
                             action = "Opened ticket";
                             break;
                         case "Resolve":
@@ -321,7 +322,7 @@ namespace HelpDesk.Classes.Repositories
                             break;
                         case "Close":
                             statusId = _gh.GetStatusId(_dh.GetStatuses()[4]);
-                            CheckTicketOwner(ticketId, user, db);
+                            CheckTicketOwner(ticketId, user, db,"Close");
                             action = "Closed ticket";
                             break;
                         case "Pending":
@@ -415,17 +416,28 @@ namespace HelpDesk.Classes.Repositories
             }
         }
 
-        public void CheckTicketOwner(int ticketId, User user, DataContext db)
+        public void CheckTicketOwner(int ticketId, User user, DataContext db, string msg)
         {
+            var message="";
             var ticket = db.Tickets.FirstOrDefault(p => p.Id == ticketId);
-            if (ticket != null && ticket.CreatedById != user.Id)
-                throw new Exception("You cannot close the ticket because you did not create it");
+            if (ticket != null && msg == "Open")
+            {
+                message = "You do not have the right to open this ticket.<br/>Either you did not create it or it was not assigned to you";
+                if (ticket.CreatedById == user.Id || ticket.AssignedToId == user.Id) return;
+
+            }
+            else if (ticket != null && msg == "Close")
+            {
+                message = "You do not have the right to close this ticket.<br/>Because you did not create it.";
+                if (ticket.CreatedById == user.Id) return;
+            }
+                throw new Exception(message);
         }
 
         public void CheckAssignedTo(int ticketId, User user, DataContext db, string msg)
         {
             var ticket = db.Tickets.FirstOrDefault(p => p.Id == ticketId);
-            if (ticket != null && ticket.AssignedToId != user.Id)
+            if (ticket != null && (ticket.AssignedToId != user.Id ))
                 throw new Exception("This ticket is not assigned to you. <br/> You cannot " + msg + " it.");
         }
 
@@ -628,7 +640,7 @@ namespace HelpDesk.Classes.Repositories
                 data.AddRange(db.Tickets.Where(p => p.CreatedById == user.Id || p.AssignedToId == user.Id).ToList());
                 foreach (var ticket in data)
                 {
-                    acts.AddRange(db.TicketActivities.Where(p => p.TicketId == ticket.Id).ToList().Select(
+                    acts.AddRange(db.TicketActivities.Where(p => p.TicketId == ticket.Id && p.CreatedById !=user.Id).ToList().Select(
                             act => new TicketActivity
                             {
                                 Id = act.Id,

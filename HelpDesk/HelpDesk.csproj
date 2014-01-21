@@ -237,6 +237,10 @@
     <Compile Include="Migrations\201401200009147_AddedTicketActivityModel.Designer.cs">
       <DependentUpon>201401200009147_AddedTicketActivityModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201401211915059_EditedTheActivityTable.cs" />
+    <Compile Include="Migrations\201401211915059_EditedTheActivityTable.Designer.cs">
+      <DependentUpon>201401211915059_EditedTheActivityTable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\AuditFileds.cs" />
@@ -729,6 +733,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201401200009147_AddedTicketActivityModel.resx">
       <DependentUpon>201401200009147_AddedTicketActivityModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201401211915059_EditedTheActivityTable.resx">
+      <DependentUpon>201401211915059_EditedTheActivityTable.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

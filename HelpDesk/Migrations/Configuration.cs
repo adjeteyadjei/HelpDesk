@@ -61,8 +61,8 @@ namespace HelpDesk.Migrations
             {
                 Id = 1.ToString(),
                 UserName = "axongeeks",
-                FullName = "Fred Adu Kumi",
-                Email = "oboiratti@helpdesk.com",
+                FullName = "Axon Geeks",
+                Email = "axongeeks@axonhelpdesk.com",
                 PhoneNumber = "0201234567",
                 DateOfBirth = DateTime.Now.AddYears(-20),
                 Picture = null,
@@ -75,8 +75,8 @@ namespace HelpDesk.Migrations
             {
                 Id = 2.ToString(),
                 UserName = "administrator",
-                FullName = "Fred Adu Kumi",
-                Email = "oboiratti@helpdesk.com",
+                FullName = "Administrator",
+                Email = "administrator@axonhelpdesk.com",
                 PhoneNumber = "0201234567",
                 DateOfBirth = DateTime.Now.AddYears(-20),
                 Picture = null,
