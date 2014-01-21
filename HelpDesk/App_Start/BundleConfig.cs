@@ -32,6 +32,7 @@ namespace HelpDesk
                 /*"~/scripts/angular/angular-ui-router.js",*/
                 "~/scripts/jquery.pnotify.min.js",
                 "~/scripts/select2.min.js",
+                "~/scripts/moment.min.js",
                 "~/Scripts/app/general/helpers.js",
                 "~/Scripts/app/general/app.js",
                 "~/Scripts/app/general/model_resources.js",

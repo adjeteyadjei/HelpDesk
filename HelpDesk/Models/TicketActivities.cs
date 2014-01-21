@@ -19,6 +19,14 @@ namespace HelpDesk.Models
     public class DashboardModel
     {
         public List<TicketActivity> Activities { get; set; }
-        public List<TicketModel> TicketStats { get; set; }
+        public TicketStats TicketStats { get; set; }
+    }
+
+    public class TicketStats
+    {
+        public List<TicketModel> New { get; set; }
+        public List<TicketModel> Open { get; set; }
+        public List<TicketModel> Pending { get; set; }
+        public List<TicketModel> Solved { get; set; }
     }
 }

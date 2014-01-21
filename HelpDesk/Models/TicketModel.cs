@@ -25,6 +25,10 @@ namespace HelpDesk.Models
         public int? ParentTicketId { get; set; }
         //public virtual Ticket ParentTicket { get; set; }
         public string AssignedToId { get; set; }
+        public string TAssignedTo { get; set; }
+        public string TAssignedBy { get; set; }
+        public string TProject { get; set; }
+        public string TPriority { get; set; }
         public virtual User AssignedTo { get; set; }
         public string AssignedById { get; set; }
         public virtual User AssignedBy { get; set; }

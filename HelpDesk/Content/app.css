@@ -767,7 +767,6 @@ ul.activityfeed {
         ul.activityfeed li .activity_time {
             color: #A6A6A6;
             padding-top: -4px;
-            text-transform: lowercase;
         }
 
 li .activity_content {

@@ -1,37 +1,56 @@
 ﻿/// <reference path="../../jquery-ui-1.8.24.js" />
 var app = angular.module('helpdesk.controllers', []);
 
-app.controller("DashboardController", ['$scope', '$http', function DashboardController($scope, $http) {
+app.controller("DashboardController", ['$scope', '$http', "OBJ", function DashboardController($scope, $http, OBJ) {
 
     $scope.activeClass = "";
     $scope.activities = [];
 
-    function ticketStatistics() {
+    function ticketStatistics(data) {
         $scope.ticketStats = {
             New: [],
             Open: [],
             Pending: [],
             Solved: []
         };
+
+        $scope.ticketStats = OBJ.rectify(data, $scope.ticketStats);
     }
 
-    function recentActivities() {
-        $scope.activities = [
-            /*{ Agent: "Adjetey", Action: "added a note to the ticket", TicketCode: "#241B", CreatedAt: "2 minutes ago" },
-            { Agent: "Edwin", Action: "Solved your ticket", TicketCode: "#102W", CreatedAt: "12 minutes ago" },
-            { Agent: "Samuel", Action: "closed ticket", TicketCode: "#313S", CreatedAt: "1 hour ago" },
-            { Agent: "Ebo", Action: "fowarded your ticket at Axon", TicketCode: "#510N", CreatedAt: "10 seconds ago" }*/
-        ];
+    function getSummaries() {
+        $http.get("/api/dashboard/summaries").success(function (res) {
+            //console.log(res.data);
+            ticketStatistics(res.data.TicketStats);
+            recentActivities(res.data.Activities);
+        });
+    }
+
+    function recentActivities(data) {
+        $scope.activities = data;
     }
 
     $scope.showtickets = function(status) {
-        console.log(status);
         $scope.activeClass = status;
+        switch (status) {
+            case 'New':
+                $scope.tickets = $scope.ticketStats.New;
+                break;
+            case "Open":
+                $scope.tickets = $scope.ticketStats.Open;
+                break;
+            case "Pending":
+                $scope.tickets = $scope.ticketStats.Pending;
+                break;
+            default:
+                $scope.tickets = $scope.ticketStats.Solved;
+        }
+        console.log(status);
+        console.log($scope.tickets);
+
     };
 
     function start() {
-        recentActivities();
-        ticketStatistics();
+        getSummaries();
     }
 
     start();

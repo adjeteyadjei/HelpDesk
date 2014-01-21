@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using System.Web.Mvc;
 using HelpDesk.Classes.Helpers;
 using HelpDesk.Classes.Repositories;
 using HelpDesk.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Filter = HelpDesk.Models.Filter;
 
 namespace HelpDesk.ApiControllers
 {
-    [Authorize]
+    [System.Web.Http.Authorize]
     public class TicketController : ApiController
     {
         private readonly TicketRepo _repo = new TicketRepo();
@@ -27,6 +29,15 @@ namespace HelpDesk.ApiControllers
 
         public UserManager<User> UserManager { get; private set; }
 
+        public JsonData Get(int id)
+        {
+            var filters = new Filter
+            {
+                ProjectId = id
+            };
+            var user = UserManager.FindByName(User.Identity.Name);
+            return _repo.GetAll(filters, user);
+        }
         public JsonData Get(Filter filters)
         {
             var user = UserManager.FindByName(User.Identity.Name);
@@ -52,45 +63,45 @@ namespace HelpDesk.ApiControllers
             return _repo.Delete(id, user);
         }
 
-        [Route("api/ticket/close")]
-        [HttpPut]
-        [Authorize]
+        [System.Web.Http.Route("api/ticket/close")]
+        [System.Web.Http.HttpPut]
+        [System.Web.Http.Authorize]
         public JsonData Close(TicketModel ticket)
         {
             var user = UserManager.FindByName(User.Identity.Name);
             return _repo.UpdateStatus(ticket.TicketId, user, "Close");
         }
 
-        [Route("api/ticket/open")]
-        [HttpGet]
-        [Authorize]
+        [System.Web.Http.Route("api/ticket/open")]
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Authorize]
         public JsonData Open(int ticketId)
         {
             var user = UserManager.FindByName(User.Identity.Name);
             return _repo.UpdateStatus(ticketId, user, "Open");
         }
 
-        [Route("api/ticket/resolve")]
-        [HttpPut]
-        [Authorize]
+        [System.Web.Http.Route("api/ticket/resolve")]
+        [System.Web.Http.HttpPut]
+        [System.Web.Http.Authorize]
         public JsonData Resolve(TicketModel ticket)
         {
             var user = UserManager.FindByName(User.Identity.Name);
             return _repo.UpdateStatus(ticket.TicketId, user, "Resolve");
         }
 
-        [Route("api/ticket/comment")]
-        [HttpPut]
-        [Authorize]
+        [System.Web.Http.Route("api/ticket/comment")]
+        [System.Web.Http.HttpPut]
+        [System.Web.Http.Authorize]
         public JsonData Comment(CommentViewModel comment)
         {
             var user = UserManager.FindByName(User.Identity.Name);
             return _repo.Comment(comment, user);
         }
 
-        [Route("api/dashboard/summaries")]
-        [HttpGet]
-        [Authorize]
+        [System.Web.Http.Route("api/dashboard/summaries")]
+        [System.Web.Http.HttpGet]
+        [System.Web.Http.Authorize]
         public JsonData Dashboard()
         {
             var dh = new DataHelpers();
@@ -101,7 +112,16 @@ namespace HelpDesk.ApiControllers
                 var user = UserManager.FindByName(User.Identity.Name);
                 //var user = UserManager.FindByName("administrator");
                 dash.Activities = _repo.GetTicketActivities(user);
-                dash.TicketStats = (List<TicketModel>)_repo.GetAll(new Filter {}, user).data;
+                var stats = new TicketStats
+                {
+                    New = _repo.GetTickets(user, "New"),
+                    Open =_repo.GetTickets(user,"Open"),
+                    Solved =_repo.GetTickets(user,"Solved"),
+                    Pending=_repo.GetTickets(user,"Pending")
+                };
+                dash.TicketStats = stats;
+
+                //dash.TicketStats = (List<TicketModel>)_repo.GetAll(new Filter {}, user).data;
 
                 return dh.ReturnJsonData(dash, true, "Dashboard data loaded", 1);
             }

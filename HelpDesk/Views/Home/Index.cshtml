@@ -23,8 +23,8 @@
                                 <img alt="" src="/Content/img/profile_blank_thumb.gif">
                             </span>
                             <div class="activity_content">
-                                <p><span class="username">{{activity.Agent}}</span> {{activity.Action}} <a href="#"><span class="label label-success">{{activity.TicketCode}}</span></a> </p>
-                                <div class="activity_time">{{activity.CreatedAt}}</div>
+                                <p><span class="username">{{activity.Agent.FullName}}</span> {{activity.Action}} <a href="#"><span class="label label-info">{{activity.Ticket.Code}}</span></a> </p>
+                                <div class="activity_time">{{activity.CreatedAt | date: 'medium'}} </div>
                             </div>
                         </li>
                         <li ng-hide="activities" style="border: none; padding: 0px;"><h4>No recent activities.</h4></li>
@@ -79,6 +79,7 @@
                             <tr>
                                 <th>#</th>
                                 <th>Subject</th>
+                                <th>Project</th>
                                 <th>Date</th>
                                 <th>Priority</th>
                                 <th>Ticket By</th>
@@ -87,11 +88,13 @@
                         </thead>
                         <tbody>
                             <tr ng-repeat="ticket in tickets">
-                                <td>{{ticket.Code}}</td>
+                                <td>{{$index + 1}}</td>
                                 <td>{{ticket.Subject}}</td>
-                                <td>{{ticket.CreatedAt}}</td>
-                                <td>{{ticket.Priority}}</td>
-                                <td>{{ticket.CreatedBy}}</td>
+                                <td>{{ticket.TProject}}</td>
+                                <td>{{ticket.CreatedAt | date:'medium' }}</td>
+                                <td>{{ticket.TPriority}}</td>
+                                <td>{{ticket.TAssignedBy}}</td>
+                                <td>{{ticket.TAssignedTo}}</td>
                             </tr>
                         </tbody>
                     </table>
