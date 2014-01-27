@@ -300,7 +300,7 @@ namespace HelpDesk.Classes.Repositories
 
         public List<Project> FilterProjects(List<Project> projects, Filter filters, User user, DataContext db)
         {
-            var firstOrDefault = db.TeamMembers.FirstOrDefault(p => p.UserId == user.Id && p.IsDeleted == false);
+            /*var firstOrDefault = db.TeamMembers.FirstOrDefault(p => p.UserId == user.Id && p.IsDeleted == false);
             if (firstOrDefault != null)
             {
                 var team = firstOrDefault.Team;
@@ -310,9 +310,18 @@ namespace HelpDesk.Classes.Repositories
                 /*foreach (var teamProject in teamProjects)
                 {
                     data.AddRange(projects.Where(p=>p.Id == teamProject.ProjectId).ToList());
-                }*/
+                }#1#
                 projects = teamProjects.Aggregate(projects, (current, teamProject) => current.Where(p =>
                     p.Id == teamProject.ProjectId).ToList());
+            }*/
+            var tms = db.TeamMembers.Where(p => p.UserId == user.Id && p.IsDeleted == false);
+            if (tms.Any())
+            {
+                foreach (var teamProjects in tms.Select(teamMember => teamMember.Team).Select(team => db.ProjectTeams.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList()))
+                {
+                    projects.AddRange(teamProjects.Aggregate(projects, (current, teamProject) => current.Where(p =>
+                        p.Id == teamProject.ProjectId).ToList()));
+                }
             }
 
             if (filters != null && filters.ProjectId != 0)

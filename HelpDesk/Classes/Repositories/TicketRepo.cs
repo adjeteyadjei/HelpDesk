@@ -18,7 +18,7 @@ namespace HelpDesk.Classes.Repositories
         {
             try
             {
-                var allStatuses = _dh.GetStatuses();
+                var allStatuses = _dh.GetStatuses();                             
 
                 using (var scope = new TransactionScope())
                 {
@@ -51,6 +51,9 @@ namespace HelpDesk.Classes.Repositories
                         CreateTicketActivity("Created a new ticket", newTicket.Id, user.Id, db);
                         db.SaveChanges();
                         scope.Complete();
+                        newRecord.TicketId = newRecord.Id = newTicket.Id;
+                        newRecord.Code = newTicket.Code;
+                        _dh.SendMail(newRecord, user);
 
                         return _dh.ReturnJsonData(newTicket, true, "Ticket has been added successfully", 1);
                     }
@@ -511,7 +514,8 @@ namespace HelpDesk.Classes.Repositories
                 TicketId = ticketId,
                 AgentId = userId,
                 Action = action,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                CreatedById = userId
             };
 
             db.TicketActivities.Add(ticketActivity);

@@ -12,4 +12,16 @@
 
         public int TicketId { get; set; }
     }
+
+    public class Settings
+    {
+        public bool sendmail { get; set; }
+        public string smtp { get; set; }
+        public int port { get; set; }
+        public string from { get; set; }
+        public string username { get; set; }
+        public string password { get; set; }
+        public string subject { get; set; }
+        public string message { get; set; }
+    }
 }
