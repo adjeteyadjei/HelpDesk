@@ -1,0 +1,7 @@
+{ sendmail:true,
+	smtp: "smtp.gmail.com",
+	port: 587,
+	from: "HeldDesk@axoninfosystems.com",
+	subject: "New Ticket From Axon Helpdesk",
+	message: "Hello {0},<br/> {1} has assigned a new ticket to you. <br/> Ticket Code: {2}. <br/> Subject: {3}. <br/> Description: {4}."
+}
