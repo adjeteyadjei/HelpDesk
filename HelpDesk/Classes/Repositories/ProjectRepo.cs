@@ -5,6 +5,7 @@ using System.Transactions;
 using System.Web;
 using HelpDesk.Classes.Helpers;
 using HelpDesk.Models;
+using Microsoft.Ajax.Utilities;
 
 namespace HelpDesk.Classes.Repositories
 {
@@ -323,6 +324,7 @@ namespace HelpDesk.Classes.Repositories
                         p.Id == teamProject.ProjectId).ToList()));
                 }
             }
+            projects = projects.DistinctBy(p => p.Name).ToList();
 
             if (filters != null && filters.ProjectId != 0)
             {
