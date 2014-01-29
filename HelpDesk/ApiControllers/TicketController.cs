@@ -29,17 +29,18 @@ namespace HelpDesk.ApiControllers
 
         public UserManager<User> UserManager { get; private set; }
 
-        public JsonData Get(int id)
+        public JsonData Get(int ProjectId)
         {
             var filters = new Filter
             {
-                ProjectId = id
+                ProjectId = ProjectId
             };
             var user = UserManager.FindByName(User.Identity.Name);
             return _repo.GetAll(filters, user);
         }
-        public JsonData Get(Filter filters)
+        public JsonData Get()
         {
+            var filters = new Filter();
             var user = UserManager.FindByName(User.Identity.Name);
             return _repo.GetAll(filters, user);
         }

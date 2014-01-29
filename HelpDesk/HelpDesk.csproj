@@ -773,7 +773,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>24480</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:24480/</IISUrl>
+          <IISUrl>http://localhost:24444/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

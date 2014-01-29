@@ -6,6 +6,7 @@ using System.Web;
 using HelpDesk.Classes.Helpers;
 using HelpDesk.Models;
 using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace HelpDesk.Classes.Repositories
 {
@@ -301,37 +302,25 @@ namespace HelpDesk.Classes.Repositories
 
         public List<Project> FilterProjects(List<Project> projects, Filter filters, User user, DataContext db)
         {
-            /*var firstOrDefault = db.TeamMembers.FirstOrDefault(p => p.UserId == user.Id && p.IsDeleted == false);
-            if (firstOrDefault != null)
-            {
-                var team = firstOrDefault.Team;
-                var data = new List<Project>();
-                    data.Clear();
-                var teamProjects = db.ProjectTeams.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList();
-                /*foreach (var teamProject in teamProjects)
-                {
-                    data.AddRange(projects.Where(p=>p.Id == teamProject.ProjectId).ToList());
-                }#1#
-                projects = teamProjects.Aggregate(projects, (current, teamProject) => current.Where(p =>
-                    p.Id == teamProject.ProjectId).ToList());
-            }*/
+            var data = new List<Project>();
+            data.Clear(); 
             var tms = db.TeamMembers.Where(p => p.UserId == user.Id && p.IsDeleted == false);
-            if (tms.Any())
+            if (!tms.Any()) return projects;
+            
+            foreach (var teamProjects in tms.Select(teamMember => teamMember.Team).Select(team => db.ProjectTeams.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList()))
             {
-                foreach (var teamProjects in tms.Select(teamMember => teamMember.Team).Select(team => db.ProjectTeams.Where(p => p.TeamId == team.Id && p.IsDeleted == false).ToList()))
-                {
-                    projects.AddRange(teamProjects.Aggregate(projects, (current, teamProject) => current.Where(p =>
-                        p.Id == teamProject.ProjectId).ToList()));
-                }
-            }
-            projects = projects.DistinctBy(p => p.Name).ToList();
-
-            if (filters != null && filters.ProjectId != 0)
-            {
-                projects = projects.Where(p => p.Id == filters.ProjectId).ToList();
+                data.AddRange(teamProjects.Aggregate(projects, (current, teamProject) => current.Where(p =>
+                    p.Id == teamProject.ProjectId).ToList()));
             }
 
-            return projects;
+            data = data.DistinctBy(p => p.Name).ToList();
+
+
+            if (filters != null && filters.ProjectId != 0 && data != null)
+            {
+                data = data.Where(p => p.Id == filters.ProjectId).ToList();
+            }
+            return data;
         }
 
         
