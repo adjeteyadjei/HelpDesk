@@ -1,0 +1,106 @@
+﻿@{
+    Layout = null;
+}
+<div class="page-header">
+    <div class="">
+        <strong>
+            <a href="#">Dashboard</a>
+            <small>Activities and Statistics Summary</small>
+        </strong>
+
+    </div>
+</div>
+
+<div class="row page_content">
+    <div class="col-sm-4 recent_activities">
+        <div class="panel panel-primary">
+            <div class="panel-heading">Recent Activities</div>
+            <div class="panel-body">
+                <div id="Activity">
+                    <ul id="Pages" class="activityfeed">
+                        <li ng-repeat="activity in activities">
+                            <span class="preview_pic">
+                                <img alt="" src="/Content/img/profile_blank_thumb.gif">
+                            </span>
+                            <div class="activity_content">
+                                <p><span class="username">{{activity.Agent.FullName}}</span> {{activity.Action}} <a href="#/ticket/TicketThread/{{activity.TicketId}}"><span class="label label-info">{{activity.Ticket.Code}}</span></a> </p>
+                                <div class="activity_time">{{activity.CreatedAt | date: 'medium'}} </div>
+                            </div>
+                        </li>
+                        <li ng-hide="activities" style="border: none; padding: 0px;"><h4>No recent activities.</h4></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-8">
+        <div class="row">
+            <div class="panel panel-primary">
+                <div class="panel-heading">Ticket Statistics</div>
+                <div class="panel-body">
+                    <div class="indicators clearfix">
+                        <div class="stats-group">
+                            <ul>
+
+                                <li ng-click="showtickets('New')" class="clickable" ng-class="{active : activeClass == 'New'}">
+                                    <div class="cell-value">{{ticketStats.New.length}}</div>
+                                    <div class="cell-title"><span>New</span></div>
+                                </li>
+
+                                <li ng-click="showtickets('Open')" class="clickable" ng-class="{active : activeClass == 'Open'}">
+                                    <div class="cell-value">{{ticketStats.Open.length}}</div>
+                                    <div class="cell-title"><span>Open</span></div>
+                                </li>
+
+                                <li ng-click="showtickets('Pending')" class="clickable" ng-class="{active : activeClass == 'Pending'}">
+                                    <div class="cell-value">{{ticketStats.Pending.length}}</div>
+                                    <div class="cell-title"><span>Pending</span></div>
+                                </li>
+
+                                <li ng-click="showtickets('Solved')" class="clickable" ng-class="{active : activeClass == 'Solved'}">
+                                    <div class="cell-value">{{ticketStats.Solved.length}}</div>
+                                    <div class="cell-title"><span>Solved</span></div>
+                                </li>
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="panel panel-primary" style="margin-top: 15px;">
+                <div class="panel-heading">{{activeClass}} Tickets</div>
+                <div class="table-responsive">
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr ng-show="ticketTitle">
+                                <th>{{ticketTitle}}</th>
+                            </tr>
+                            <tr>
+                                <th>#</th>
+                                <th>Subject</th>
+                                <th>Project</th>
+                                <th>Date</th>
+                                <th>Priority</th>
+                                <th>Ticket By</th>
+                                <th>Agent</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="ticket in tickets" class="clickable" ng-click="openTicket(ticket.Id)">
+                                <td>{{$index + 1}}</td>
+                                <td>{{ticket.Subject}}</td>
+                                <td>{{ticket.TProject}}</td>
+                                <td>{{ticket.CreatedAt | date:'medium' }}</td>
+                                <td>{{ticket.TPriority}}</td>
+                                <td>{{ticket.TAssignedBy}}</td>
+                                <td>{{ticket.TAssignedTo}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>

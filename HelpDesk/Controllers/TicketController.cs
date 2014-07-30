@@ -17,10 +17,10 @@ namespace HelpDesk.Controllers
             return View();
         }
 
-        public ActionResult TicketThread(string id)
+        public ActionResult TicketThread()
         {
-            ViewBag.id = id;
-            return View();
+            //ViewBag.id = id;
+            return PartialView();
         }
 
     }

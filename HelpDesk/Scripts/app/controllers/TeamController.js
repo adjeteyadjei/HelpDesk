@@ -1,6 +1,4 @@
-﻿var app = angular.module('helpdesk.controllers', []);
-
-app.controller("TeamController", ['$scope', 'Team', '$http', 'MsgBox', 'OBJ', 'pagingService', function TeamController($scope, Team, $http, MsgBox, OBJ, pagingService) {
+﻿angular.module('helpdesk').controller("TeamController", ['$scope', 'Team', '$http', 'MsgBox', 'OBJ', 'pagingService', function TeamController($scope, Team, $http, MsgBox, OBJ, pagingService) {
 
     var defaultObj = {
         TeamId: "",
@@ -23,6 +21,30 @@ app.controller("TeamController", ['$scope', 'Team', '$http', 'MsgBox', 'OBJ', 'p
                 callback(res);
         });
     }
+
+    $scope.members = [];
+    $scope.addMember = function (agent) {
+        if (!agent) {
+            MsgBox.notice("Please select agent.");
+            return;
+        }
+        if (findMemberInList(agent.FullName).length === 0) {
+            $scope.members.push(agent.FullName);
+        } else {
+            MsgBox.notice(agent.FullName + " is already added to list.");
+        }
+    };
+
+    function findMemberInList(obj) {
+        var result = $scope.members.filter(function (n) {
+            return n === obj;
+        });
+        return result;
+    }
+
+    $scope.removeMember = function (index) {
+        $scope.members.splice(index, 1);
+    };
 
     $scope.saveTeam = function(newTeam) {
         //retrieve the model from the client and extend the object with the defaults
@@ -84,8 +106,8 @@ app.controller("TeamController", ['$scope', 'Team', '$http', 'MsgBox', 'OBJ', 'p
     $scope.editTeam = function(team) {
         $scope.formTitle = "Edit Team";
         $scope.newTeam = angular.copy(team);
+        $scope.members = $scope.newTeam.Members;
         //console.log($scope.newTeam.TeamType);
-        //$scope.newTeam.TeamType = "Standard";
         teamForm.modal("show");
     };
 

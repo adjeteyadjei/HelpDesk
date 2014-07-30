@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Nav = "Tickets";
+    Layout = null;
 }
 
 <div class="page-header">
@@ -12,20 +12,24 @@
     </div>
 </div>
 
-<div class="row page_content" ng-controller="TicketController">
+<div class="row page_content">
     <div class="form-horizontal" role="form">
         <div class="form-group">
-            @*<label for="project" class="col-sm-2 control-label">Select Project:</label>*@
             <div class="col-sm-3">
+                @*<span class="input-group-addon"><i class="fa fa-spinner {{loading}}"></i></span>*@
                 <select id="project" class="form-control" ng-model="selectedProject"
                         ng-options="project as project.Name for project in projects"
-                        ng-change="projectChange(selectedProject)"></select>
+                        data-placeholder="Select Project" ui-select2="{allowClear:true}"
+                        ng-change="projectChange(selectedProject)">
+                    <option></option>
+                </select>
             </div>
             <div class="col-sm-9">
-                
+
             </div>
         </div>
     </div>
+
     <div class="{{grid_size}}" id="ticket_grid">
         @Html.Partial("_TicketGrid")
     </div>
@@ -35,8 +39,3 @@
     </div>
 
 </div>
-
-@section scripts
-{
-    <script src="~/Scripts/app/controllers/TicketsController.js"></script>
-}

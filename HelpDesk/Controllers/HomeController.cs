@@ -23,6 +23,11 @@ namespace HelpDesk.Controllers
             return View();
         }
 
+        public ActionResult Dashboard()
+        {
+            return View();
+        }
+
         public ActionResult Login()
         {
             return View();

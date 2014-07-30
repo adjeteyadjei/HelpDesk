@@ -17,23 +17,53 @@
                     <div class="form-group">
                         <label class="control-label" for="Description">Description:</label>
                         <div class="controls">
-                            <textarea id="Description" class="form-control" ng-model="newTeam.Description" cols="5" rows="5"></textarea>
+                            <textarea id="Description" class="form-control" ng-model="newTeam.Description" cols="5" rows="3"></textarea>
                         </div>
                     </div>
                     
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <label class="control-label">Members:</label>
                         <div class="controls">
                             <select multiple="" ui-select2="membersOptions" class="form-control non_input_control" ng-model="newTeam.Members"
                                     ng-options="agent as agent.FullName for agent in agents"></select>
                         </div>
+                    </div>*@
+                    
+                    <div class="input-group form-group">
+                        <select ui-select2="{ allowClear: true}" data-placeholder="Select Agent" class="form-control" ng-required="true"
+                                ng-model="agent" ng-options="agent.FullName for agent in agents">
+                            <option value=""></option>
+                        </select>
+
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="addMember(agent)"><i class="fa fa-plus-circle icon_only"></i></button>
+                        </span>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0px;">
+                        <div class="">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Members</div>
+                                <table class="table table-condensed">
+                                    <tbody>
+                                        <tr ng-repeat="member in members">
+                                            <td class="ax_grid_action1">{{$index+1}}</td>
+                                            <td>{{member}}</td>
+                                            <td class="ax_grid_action1">
+                                                <a href="" ng-click="removeMember($index)"> <i class="glyphicon glyphicon-remove"></i> </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button ng-show="newTeam.TeamId" class="btn btn-danger pull-left" ng-click="confirmDelete(newTeam)"><i class="glyphicon glyphicon-remove"></i>Delete</button>
-                <button class="btn btn-primary" ng-click="saveTeam(newTeam)"><i class='iconfa-save'></i>Save </button>
-                <button class="btn btn-default" data-dismiss="modal"><i class='iconfa-ban-circle'></i>Cancel</button>
+                <button ng-show="newTeam.TeamId" class="btn btn-danger pull-left" ng-click="confirmDelete(newTeam)"><i class="fa fa-trash-o"></i>Delete</button>
+                <button class="btn btn-primary" ng-click="saveTeam(newTeam)"><i class='fa fa-save'></i>Save </button>
+                <button class="btn btn-default" data-dismiss="modal"><i class='fa fa-ban'></i>Cancel</button>
             </div>
         </div>
     </div>

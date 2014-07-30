@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Nav = "Config";
+    Layout = null;
 }
 <div class="page-header">
     <div>
@@ -8,45 +8,43 @@
             <small>Set up system lookup and default values</small>
         </strong>
     </div>
-    
+
 </div>
 
-<div class="row page_content" ng-controller="LookUpController">
+<div class="row page_content">
     <div class="row">
         <button type="button" ng-show="lookUpModel" class='btn btn-primary' ng-click="showNewLookUp()" data-toggle="modal" href="#lookUp_form">
             <i class='glyphicon glyphicon-plus-sign ax_icon'></i>Add {{lookUpModel.name}}
         </button>
-        
+
         <div class="pull-right col-sm-3">
             <select id="lookUpModel" ng-model="lookUpModel" class='form-control'
                     name="lookUpModel" ng-options='model as model.name for model in lookUpModels'
                     ng-change="selectModel()"></select>
         </div>
     </div>
-    
+
     <div class="panel panel-primary">
         <div class="panel-heading">{{lookUpModel.name}}</div>
-        <div class="panel-body">
-            <table class='table table-striped table-bordered ax_table table-condensed'>
-                <thead>
-                    <tr>
-                        <th class="ax_grid_action1">#</th>
-                        <th>Name</th>
-                        <th>Describtion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="lookUp in lookUps" ng-click="editLookUp(lookUp)" class="link-row">
-                        <td>{{$index + 1}}</td>
-                        <td>{{lookUp.Name}}</td>
-                        <td>{{lookUp.Description}}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <table class='table table-striped table-bordered ax_table table-condensed'>
+            <thead>
+                <tr>
+                    <th class="ax_grid_action1">#</th>
+                    <th>Name</th>
+                    <th>Describtion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="lookUp in lookUps" ng-click="editLookUp(lookUp)" class="link-row">
+                    <td>{{$index + 1}}</td>
+                    <td>{{lookUp.Name}}</td>
+                    <td>{{lookUp.Description}}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
-    
+
 
     @Html.Partial("_LookUpForm")
 
@@ -70,8 +68,3 @@
         </div>
     </div>
 </div>
-
-@section scripts
-{
-    <script type="text/javascript" src="~/Scripts/app/controllers/LookUpsController.js"></script>
-}

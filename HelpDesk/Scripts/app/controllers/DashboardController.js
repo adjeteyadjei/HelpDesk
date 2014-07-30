@@ -1,7 +1,5 @@
-﻿/// <reference path="../../jquery-ui-1.8.24.js" />
-var app = angular.module('helpdesk.controllers', []);
-
-app.controller("DashboardController", ['$scope', '$http', "OBJ", function DashboardController($scope, $http, OBJ) {
+﻿angular.module('helpdesk').controller("DashboardController", ['$scope', '$http', 'OBJ', '$location',
+    function DashboardController($scope, $http, OBJ, $location) {
 
     $scope.activeClass = "";
     $scope.activities = [];
@@ -44,9 +42,12 @@ app.controller("DashboardController", ['$scope', '$http', "OBJ", function Dashbo
             default:
                 $scope.tickets = $scope.ticketStats.Solved;
         }
-        console.log(status);
-        console.log($scope.tickets);
+    };
 
+    $scope.openTicket = function (id) {
+        if (id) {
+            $location.path("/ticket/TicketThread/" + id);
+        }
     };
 
     function start() {

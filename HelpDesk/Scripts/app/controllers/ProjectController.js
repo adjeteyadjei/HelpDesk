@@ -1,6 +1,4 @@
-﻿var app = angular.module('helpdesk.controllers', []);
-
-app.controller("ProjectController", ['$scope', 'Project', '$http', 'MsgBox', 'OBJ', 'pagingService', function ProjectController($scope, Project, $http, MsgBox, OBJ, pagingService) {
+﻿angular.module('helpdesk').controller("ProjectController", ['$scope', 'Project', '$http', 'MsgBox', 'OBJ', 'pagingService', function ProjectController($scope, Project, $http, MsgBox, OBJ, pagingService) {
 
     var defaultObj = {
         Id: "",

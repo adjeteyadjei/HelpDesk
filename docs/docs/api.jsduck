@@ -1,0 +1,14 @@
+{
+    "--title": "helpdesk API Documentation",
+    "--output":"out\\api",
+    "--warnings":"-extend,-link,-type_name",
+	"--local-storage-db":"helpdesk.api.all",
+    "--external":[],
+    "--":[
+        "src", "--no-source"
+    ],
+	"--images": [
+		"images"
+	],
+    "--tags": "E:\\Projects\\Ritsoft\\ritdev\\customtags"
+}

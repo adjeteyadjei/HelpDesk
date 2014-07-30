@@ -6,6 +6,10 @@ namespace HelpDesk
     public class BundleConfig
     {
         // For more information on Bundling, visit http://go.microsoft.com/fwlink/?LinkId=254725
+        /// <summary>
+        /// Registers the bundles.
+        /// </summary>
+        /// <param name="bundles">The bundles.</param>
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
@@ -29,7 +33,7 @@ namespace HelpDesk
                 "~/scripts/angular/angular-resource.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/appjs").Include(
-                /*"~/scripts/angular/angular-ui-router.js",*/
+                "~/scripts/angular-ui-router.min.js",
                 "~/scripts/jquery.pnotify.min.js",
                 "~/scripts/select2.min.js",
                 "~/scripts/moment.min.js",
@@ -42,7 +46,15 @@ namespace HelpDesk
                 "~/Scripts/app/components/pager_component.js",
                 "~/Scripts/app/components/print_component.js",
                 "~/Scripts/app/components/time_component.js",
-                "~/Scripts/app/components/select2.js"));
+                "~/Scripts/app/components/select2.js",
+                "~/Scripts/app/controllers/DashboardController.js",
+                "~/Scripts/app/controllers/LookUpController.js",
+                "~/Scripts/app/controllers/ProjectController.js",
+                "~/Scripts/app/controllers/TeamController.js",
+                "~/Scripts/app/controllers/TicketController.js",
+                "~/Scripts/app/controllers/TicketThreadController.js",
+                "~/Scripts/app/controllers/UserController.js"
+                ));
 
             bundles.Add(new StyleBundle("~/Content/skins").Include(
                       "~/Content/bootstrap.css",
@@ -50,6 +62,7 @@ namespace HelpDesk
                       "~/Content/jquery.pnotify.css",
                       "~/Content/jquery.pnotify.icons.css",
                       "~/Content/css/select2.css",
+                      "~/Content/css/select2-bootstrap.css",
                       "~/Content/font-awesome.min.css",
                       "~/Content/animate.min.css",
                       "~/Content/app.css"));

@@ -22,7 +22,7 @@
                                         </div>
                                         <div class="ticket_subject">
                                             <h3 class="new_ticket">
-                                                <a href="/Ticket/TicketThread/{{ticket.Id}}">{{ticket.Title}}<span class="ticket_id"> #{{ticket.Code}}</span></a>
+                                                <a href="#/ticket/TicketThread/{{ticket.Id}}">{{ticket.Title}}<span class="ticket_id"> #{{ticket.Code}}</span></a>
                                             </h3>
 
                                             <div class="info-data hideForList">
@@ -41,7 +41,6 @@
                                                 <label>Agent: </label>
                                                 <span class="result">{{ticket.AssignedTo.FullName}}</span>
                                             </li>
-
                                             <li class="quick-action">
                                                 <label>Status: </label>
                                                 <span class="result">{{ticket.Status.Name}}</span>

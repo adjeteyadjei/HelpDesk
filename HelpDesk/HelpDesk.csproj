@@ -290,10 +290,12 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\css\select2-bootstrap.css" />
     <Content Include="Content\css\select2-spinner.gif" />
     <Content Include="Content\css\select2.css" />
     <Content Include="Content\css\select2.png" />
     <Content Include="Content\css\select2x2.png" />
+    <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
     <Content Include="Content\images\glyphicons-halflings-white.png" />
     <Content Include="Content\images\glyphicons-halflings.png" />
@@ -306,6 +308,7 @@
     <Content Include="Content\jquery.pnotify.css" />
     <Content Include="Content\jquery.pnotify.icons.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="fonts\fontawesome\fontawesome-webfont.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -324,6 +327,8 @@
     <Content Include="Content\fonts\OpenSans-Light-webfont.ttf" />
     <Content Include="Content\fonts\OpenSans-Regular-webfont.ttf" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.ttf" />
+    <Content Include="Scripts\angular-ui-router.js" />
+    <Content Include="Scripts\angular-ui-router.min.js" />
     <Content Include="Scripts\angular\angular-animate.js" />
     <Content Include="Scripts\angular\angular-animate.min.js" />
     <Content Include="Scripts\angular\angular-cookies.js" />
@@ -354,12 +359,12 @@
     <Content Include="Scripts\app\components\services\paging_service.js" />
     <Content Include="Scripts\app\components\time_component.js" />
     <Content Include="Scripts\app\controllers\DashboardController.js" />
-    <Content Include="Scripts\app\controllers\lookUpsController.js" />
+    <Content Include="Scripts\app\controllers\LookUpController.js" />
     <Content Include="Scripts\app\controllers\ProjectController.js" />
     <Content Include="Scripts\app\controllers\TeamController.js" />
-    <Content Include="Scripts\app\controllers\TicketsController.js" />
+    <Content Include="Scripts\app\controllers\TicketController.js" />
     <Content Include="Scripts\app\controllers\TicketThreadController.js" />
-    <Content Include="Scripts\app\controllers\UsersController.js" />
+    <Content Include="Scripts\app\controllers\UserController.js" />
     <Content Include="NLog.config" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
@@ -369,6 +374,10 @@
     <Content Include="fonts\fontawesome\fontawesome-webfonte63c.ttf" />
     <Content Include="fonts\fontawesome\fontawesome-webfonte63c.woff" />
     <Content Include="Content\Config\settings.json" />
+    <Content Include="fonts\fontawesome-webfont.woff" />
+    <Content Include="fonts\fontawesome-webfont.ttf" />
+    <Content Include="fonts\fontawesome-webfont.eot" />
+    <Content Include="fonts\FontAwesome.otf" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -735,6 +744,7 @@
     <Content Include="Views\Project\Index.cshtml" />
     <Content Include="Views\Project\_ProjectForm.cshtml" />
     <Content Include="Views\Ticket\_ForwardTicket.cshtml" />
+    <Content Include="Views\Home\Dashboard.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

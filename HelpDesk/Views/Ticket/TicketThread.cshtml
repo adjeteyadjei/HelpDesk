@@ -1,19 +1,15 @@
-﻿@{
-    ViewBag.Nav = "Tickets";
-}
-
-<div class="page-header">
+﻿<div class="page-header">
     <div class="">
         <strong>
             @Html.ActionLink("Tickets", "Index")
-            <small>| Ticket - @ViewBag.id</small>
+            @*<small>| Ticket - @ViewBag.id</small>*@
         </strong>
 
     </div>
 </div>
 
-<div class="row page_content" ng-controller="TicketThreadController">
-    <input type="hidden" id="ticket_code" value="@ViewBag.id" />
+<div class="row page_content">
+    @*<input type="hidden" id="ticket_code" value="@ViewBag.id" />*@
     <div class="col-sm-3">
         @Html.Partial("_TicketProperties")
     </div>
@@ -24,8 +20,3 @@
     
     @Html.Partial("_ForwardTicket")
 </div>
-
-@section scripts
-{
-    <script src="~/Scripts/app/controllers/TicketThreadController.js"></script>
-}
