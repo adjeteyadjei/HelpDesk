@@ -28,8 +28,8 @@
             MsgBox.notice("Please select agent.");
             return;
         }
-        if (findMemberInList(agent.FullName).length === 0) {
-            $scope.members.push(agent.FullName);
+        if (findMemberInList(agent).length === 0) {
+            $scope.members.push(agent);
         } else {
             MsgBox.notice(agent.FullName + " is already added to list.");
         }
@@ -37,7 +37,7 @@
 
     function findMemberInList(obj) {
         var result = $scope.members.filter(function (n) {
-            return n === obj;
+            return n.Id === obj.Id;
         });
         return result;
     }
@@ -107,7 +107,6 @@
         $scope.formTitle = "Edit Team";
         $scope.newTeam = angular.copy(team);
         $scope.members = $scope.newTeam.Members;
-        //console.log($scope.newTeam.TeamType);
         teamForm.modal("show");
     };
 
