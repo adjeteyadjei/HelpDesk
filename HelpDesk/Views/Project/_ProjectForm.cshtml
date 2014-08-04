@@ -21,7 +21,7 @@
                             <textarea id="Description" class="form-control" ng-model="newProject.Description" cols="5" rows="5"></textarea>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="control-label">Teams:</label>
                         <div class="controls">
@@ -29,15 +29,44 @@
                                     ng-options="team as team.Name for team in teams" ng-selected="teamChange(newProject.Teams)"></select>
                         </div>
                     </div>
+                    @*<div class="input-group form-group">
+                        <select ui-select2="{ allowClear: true}" data-placeholder="Select Team" class="form-control" ng-required="true"
+                                ng-model="team" ng-options="team.Name for team in teams">
+                            <option value=""></option>
+                        </select>
 
-                    <div class="form-group">
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button" ng-click="addTeam(team)"><i class="fa fa-plus-circle icon_only"></i></button>
+                        </span>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 0px;">
+                        <div class="">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">Teams</div>
+                                <table class="table table-condensed">
+                                    <tbody>
+                                        <tr ng-repeat="team in projectTeams">
+                                            <td class="ax_grid_action1">{{$index+1}}</td>
+                                            <td>{{team.Name}}</td>
+                                            <td class="ax_grid_action1">
+                                                <a href="" ng-click="removeTeam($index)"> <i class="glyphicon glyphicon-remove"></i> </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>*@
+
+                   <div class="form-group">
                         <label class="control-label">Leader:</label>
                         <div class="controls">
                             <select multiple="" ui-select2="{allowClear:false}" class="form-control non_input_control" ng-model="newProject.Leaders"
                                     ng-options="agent as agent.FullName for agent in teamAgents"></select>
                         </div>
                     </div>
-                    
+
                     <div class="form-group">
                         <label class="control-label" for="IsActive"></label>
                         <div class="controls">
@@ -51,8 +80,8 @@
             </div>
             <div class="modal-footer">
                 <button ng-show="newProject.ProjectId" class="btn btn-danger pull-left" ng-click="confirmDelete(newProject)"><i class="glyphicon glyphicon-remove"></i>Delete</button>
-                <button class="btn btn-primary" ng-click="saveProject(newProject)"><i class='iconfa-save'></i>Save </button>
-                <button class="btn btn-default" data-dismiss="modal"><i class='iconfa-ban-circle'></i>Cancel</button>
+                <button class="btn btn-primary" ng-click="saveProject(newProject)"><i class='fa fa-save'></i>Save </button>
+                <button class="btn btn-default" data-dismiss="modal"><i class='fa fa-ban'></i>Cancel</button>
             </div>
         </div>
     </div>

@@ -92,7 +92,7 @@ namespace HelpDesk.Classes.Repositories
             }
         }
 
-        /*public JsonData Delete(int id)
+        public JsonData Delete(int id)
         {
             try
             {
@@ -116,7 +116,7 @@ namespace HelpDesk.Classes.Repositories
             {
                 return _dh.ExceptionProcessor(e);
             }
-        }*/
+        }
 
         /*public JsonData Get(int id)
         {
@@ -271,7 +271,7 @@ namespace HelpDesk.Classes.Repositories
             }
         }*/
 
-        /*public void DeleteTeamRelations(int teamId)
+        public void DeleteTeamRelations(int teamId)
         {
             using (var db = new DataContext())
             {
@@ -293,7 +293,7 @@ namespace HelpDesk.Classes.Repositories
                     db.SaveChanges();
                 }
             }
-        }*/
+        }
 
         public UserModel[] GetAllTeamMemers(int teamId)
          {

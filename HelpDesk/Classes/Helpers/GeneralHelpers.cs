@@ -6,9 +6,9 @@ using HelpDesk.Models;
 
 namespace HelpDesk.Classes.Helpers
 {
-    public class GeneralHelpers
+    public static class GeneralHelpers
     {
-        public string GenerateTicketCode(TicketModel tm)
+        public static string GenerateTicketCode(TicketModel tm)
         {
             string code;
             switch (tm.Type.Name)
@@ -29,7 +29,7 @@ namespace HelpDesk.Classes.Helpers
             return code + DateTime.Now.ToFileTime();
         }
 
-        public int GetStatusId(string status)
+        public static int GetStatusId(string status)
         {
             switch (status)
             {
@@ -43,6 +43,23 @@ namespace HelpDesk.Classes.Helpers
                     return 3;
                 default:
                     return 5;
+            }
+        }
+
+        public static string GetStatus(int i)
+        {
+            switch (i)
+            {
+                case 2:
+                    return "Opened";
+                case 1:
+                    return "New";
+                case 4:
+                    return "Solved";
+                case 3:
+                    return "Pending";
+                default:
+                    return "Closed";
             }
         }
     }

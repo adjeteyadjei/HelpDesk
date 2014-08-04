@@ -100,6 +100,15 @@ namespace HelpDesk.ApiControllers
             return _repo.Comment(comment, user);
         }
 
+        [System.Web.Http.Route("api/ticket/forward")]
+        [System.Web.Http.HttpPut]
+        [System.Web.Http.Authorize]
+        public JsonData Forward(ForwardModel ticket)
+        {
+            var user = UserManager.FindByName(User.Identity.Name);
+            return _repo.ForwardTicket(ticket, user);
+        }
+
         [System.Web.Http.Route("api/dashboard/summaries")]
         [System.Web.Http.HttpGet]
         [System.Web.Http.Authorize]

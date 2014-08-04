@@ -12,7 +12,7 @@ namespace HelpDesk.Classes.Repositories
     public class TicketRepo
     {
         private readonly DataHelpers _dh = new DataHelpers();
-        private readonly GeneralHelpers _gh = new GeneralHelpers();
+        //private readonly GeneralHelpers _gh = new GeneralHelpers();
 
         public JsonData Post(TicketModel newRecord, User user)
         {
@@ -30,10 +30,10 @@ namespace HelpDesk.Classes.Repositories
                         {
                             Subject = newRecord.Subject,
                             Description = newRecord.Description,
-                            Code = _gh.GenerateTicketCode(newRecord),
+                            Code = GeneralHelpers.GenerateTicketCode(newRecord),
                             ProjectId = newRecord.Project.Id,
                             TypeId = newRecord.Type.Id,
-                            StatusId = _gh.GetStatusId(allStatuses[0]),
+                            StatusId = GeneralHelpers.GetStatusId(allStatuses[0]),
                             PriorityId = newRecord.Priority.Id,
                             ParentTicketId = newRecord.ParentId,
                             AssignedToId = newRecord.AssignedTo.Id,
@@ -53,7 +53,7 @@ namespace HelpDesk.Classes.Repositories
                         scope.Complete();
                         newRecord.TicketId = newRecord.Id = newTicket.Id;
                         newRecord.Code = newTicket.Code;
-                        _dh.SendMail(newRecord, user);
+                        _dh.SendMail(newTicket, user);
 
                         return _dh.ReturnJsonData(newTicket, true, "Ticket has been added successfully", 1);
                     }
@@ -110,6 +110,8 @@ namespace HelpDesk.Classes.Repositories
                         CreateTicketDetail(oRecord, user, db);
                         CreateTicketActivity("Updated the ticket", oRecord.Id, user.Id, db);
                         db.SaveChanges();
+
+                        _dh.SendMail(oRecord, user);
                         scope.Complete();
                         return _dh.ReturnJsonData(oRecord, true, "Ticket record has been successfully updated", 1);
                     }
@@ -153,7 +155,7 @@ namespace HelpDesk.Classes.Repositories
             {
                 using (var db = new DataContext())
                 {
-                    var closedStatusId = _gh.GetStatusId(_dh.GetStatuses()[4]);
+                    var closedStatusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[4]);
                     var ts = db.Tickets.Where(p => p.IsDeleted == false && p.StatusId != closedStatusId);
                     var message = " No ticket found";
                     if (!ts.Any()) return _dh.ReturnJsonData(null, false, message, 0);
@@ -313,23 +315,23 @@ namespace HelpDesk.Classes.Repositories
                     switch (theStatus)
                     {
                         case "Open":
-                            statusId = _gh.GetStatusId(_dh.GetStatuses()[1]);
+                            statusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[1]);
                             //CheckAssignedTo(ticketId, user, db, "Open");
                             CheckTicketOwner(ticketId, user, db, "Open");
                             action = "Opened ticket";
                             break;
                         case "Resolve":
-                            statusId = _gh.GetStatusId(_dh.GetStatuses()[3]);
+                            statusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[3]);
                             CheckAssignedTo(ticketId, user, db, "Resolve");
                             action = "Resolved ticket";
                             break;
                         case "Close":
-                            statusId = _gh.GetStatusId(_dh.GetStatuses()[4]);
+                            statusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[4]);
                             CheckTicketOwner(ticketId, user, db,"Close");
                             action = "Closed ticket";
                             break;
                         case "Pending":
-                            statusId = _gh.GetStatusId(_dh.GetStatuses()[2]);
+                            statusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[2]);
                             break;
                         default:
                             throw new Exception("Status is not defined");
@@ -410,6 +412,8 @@ namespace HelpDesk.Classes.Repositories
                             //AssignedById = ticket.AssignedById
 
                         };
+
+                    _dh.SendMail(ticket, user);
                     return _dh.ReturnJsonData(tick, true, "Ticket has been Updated", 1);
                 }
             }
@@ -505,7 +509,7 @@ namespace HelpDesk.Classes.Repositories
 
         public void CreateTicketActivity(string action, int ticketId, string userId, DataContext db)
         {
-            var openStatusId = _gh.GetStatusId(_dh.GetStatuses()[1]);
+            var openStatusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[1]);
             var tick =
                 db.Tickets.FirstOrDefault(p => p.Id == ticketId && p.StatusId == openStatusId );
             if (tick != null && action == "Opened ticket") return;
@@ -679,16 +683,16 @@ namespace HelpDesk.Classes.Repositories
                 switch (theStatus)
                 {
                     case "Open":
-                        statusId = _gh.GetStatusId(_dh.GetStatuses()[1]);
+                        statusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[1]);
                         break;
                     case "Solved":
-                        statusId = _gh.GetStatusId(_dh.GetStatuses()[3]);
+                        statusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[3]);
                         break;
                     case "New":
-                        statusId = _gh.GetStatusId(_dh.GetStatuses()[0]);
+                        statusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[0]);
                         break;
                     case "Pending":
-                        statusId = _gh.GetStatusId(_dh.GetStatuses()[2]);
+                        statusId = GeneralHelpers.GetStatusId(_dh.GetStatuses()[2]);
                         break;
                     default:
                         throw new Exception("Status is not defined");
@@ -777,6 +781,40 @@ namespace HelpDesk.Classes.Repositories
                     return data;
                 }
             
+        }
+
+        public JsonData ForwardTicket(ForwardModel teamTick, User user)
+        {
+            try
+            {
+                using (var scope = new TransactionScope())
+                {
+                    using (var db = new DataContext())
+                    {
+                        var ticket = db.Tickets.FirstOrDefault(x => x.Id == teamTick.ticketId);
+                        //var team = db.Teams.FirstOrDefault(x => x.Id == teamTick.teamId);
+
+                        var mem = db.TeamMembers.FirstOrDefault(x => x.TeamId == teamTick.teamId);
+
+                        if (ticket != null)
+                        {
+                            if (mem != null)
+                            {
+                                ticket.AssignedToId = mem.UserId;
+                                CreateTicketActivity("Forwarded a ticket", ticket.Id, user.Id, db);
+                                db.SaveChanges();
+                                _dh.SendMail(ticket, user);
+                            }
+                        }
+                        scope.Complete();
+                        return _dh.ReturnJsonData(null, true, "Ticket has been forwarded successfully", 1);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return _dh.ExceptionProcessor(e);
+            }
         }
     }
 }

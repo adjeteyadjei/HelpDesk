@@ -6,14 +6,9 @@ using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
-using System.Web.Helpers;
 using HelpDesk.Models;
 using Newtonsoft.Json;
-using WebGrease;
-using System.Net;
-using System.Net.Mail;
 using SendGridMail;
-using SendGridMail.Transport;
 
 
 namespace HelpDesk.Classes.Helpers
@@ -122,19 +117,35 @@ namespace HelpDesk.Classes.Helpers
             }
         }
 
-        public void SendMail(TicketModel ticket, User user)
+        public void SendMail(Ticket ticket, User user)
         {
             var dh = new DataHelpers();
             string error;
 
             var settings = dh.ReadSettngs();
-            var message = String.Format(settings.message, ticket.AssignedTo.FullName, user.FullName, ticket.Code, ticket.Subject, ticket.Description);
+            var status = GeneralHelpers.GetStatus(ticket.StatusId);
+            var message = "";
+            switch (status)
+            {
+                case "New":
+                    message = String.Format("A new Ticket '{0}' has been created.", ticket.Subject);
+                    break;
+                case "Opened":
+                    message = String.Format("Ticket : {0} has been deleted.", ticket.Subject);
+                    break;
+                case "Solved":
+                    message = String.Format("Ticket : {0} has been solved. Please check and close it.", ticket.Subject);
+                    break;
+                default:
+                    break;
+            }
+            //message = String.Format(settings.message, ticket.AssignedTo.FullName, user.FullName, ticket.Code, ticket.Subject, ticket.Description);
 
-            if (settings.sendmail)
+            /*if (settings.sendmail)
             {
                 SendMail(settings.smtp, settings.port, settings.username, settings.password, settings.from,
                     ticket.AssignedTo.Email, settings.subject, message, out error);
-            }/*
+            }*//*
             if (settings.sendmail)
             {
                 SendMailWithSendGrid(settings.from,ticket.AssignedTo.Email, settings.subject, message, out error);
@@ -197,10 +208,10 @@ namespace HelpDesk.Classes.Helpers
                 var credentials = new NetworkCredential("biggash730", "kp0l3m1ah");
 
                 // Create an SMTP transport for sending email.
-                var transportSmtp = SMTP.GetInstance(credentials);
+                //var transportSmtp = SMTP.GetInstance(credentials);
 
                 // Send the email.
-                transportSmtp.Deliver(myMessage);
+                //transportSmtp.Deliver(myMessage);
 
                 error = "";
                 return true;

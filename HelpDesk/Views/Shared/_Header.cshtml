@@ -7,10 +7,10 @@
         <nav class="navbar-collapse collapse" role="navigation" style="height: 1px;">
             <ul class="nav navbar-nav">
                 <li class="">
-                    <a href="/"><i class="glyphicon glyphicon-home"></i>Dashboard</a>
+                    <a href="/"><i class="fa fa-dashboard"></i>Dashboard</a>
                 </li>
                 <li>
-                    <a ui-sref="tickets"><i class="iconfa-tags"></i>Tickets</a>
+                    <a ui-sref="tickets"><i class="fa fa-tags"></i>Tickets</a>
                 </li>
                 @*<li>
                     <a ui-sref="reports"><i class="glyphicon glyphicon-book"></i>Reports</a>
@@ -18,20 +18,20 @@
                 @if (User.IsInRole("Administrator") || User.IsInRole("TeamLead"))
                 {
                     <li>
-                        <a ui-sref="users"><i class="iconfa-user"></i>Users</a>
+                        <a ui-sref="users"><i class="fa fa-user"></i>Users</a>
                     </li>
                 }
 
                 @if (User.IsInRole("Administrator"))
                 {
                     <li>
-                        <a ui-sref ="teams"><i class="iconfa-group"></i>Teams</a>
+                        <a ui-sref ="teams"><i class="fa fa-group"></i>Teams</a>
                     </li>
                     <li>
                         <a ui-sref="projects"><i class="glyphicon glyphicon-th-large"></i>Projects</a>
                     </li>
                     <li>
-                        <a ui-sref="config"><i class="iconfa-cogs"></i>Configuration</a>
+                        <a ui-sref="config"><i class="fa fa-cogs"></i>Configuration</a>
                     </li>
                 }
             </ul>

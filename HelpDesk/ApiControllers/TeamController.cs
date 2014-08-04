@@ -42,10 +42,9 @@ namespace HelpDesk.ApiControllers
             var user = UserManager.FindByName(User.Identity.Name);
             return _repo.Update(clientData, user);
         }
- /*
         public JsonData Delete(int id)
         {
             return _repo.Delete(id);
-        }*/
+        }
     }
 }

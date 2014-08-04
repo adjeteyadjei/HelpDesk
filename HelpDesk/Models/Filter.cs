@@ -24,4 +24,10 @@
         public string subject { get; set; }
         public string message { get; set; }
     }
+
+    public class ForwardModel
+    {
+        public int ticketId { get; set; }
+        public int teamId { get; set; }
+    }
 }

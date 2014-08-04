@@ -3,7 +3,8 @@
     var defaultObj = {
         TeamId: "",
         Name: "",
-        Description: ""
+        Description: "",
+        Members: []
     };
     var pagerId = "team_pager";
     var objPager = pagingService.add(pagerId);
@@ -49,6 +50,7 @@
     $scope.saveTeam = function(newTeam) {
         //retrieve the model from the client and extend the object with the defaults
         var theTeam = OBJ.rectify(angular.copy(newTeam), defaultObj);
+        theTeam.Members = $scope.members;
 
         if (theTeam["TeamId"] || theTeam["TeamId"] !== "") {
             //this is an update
@@ -101,6 +103,7 @@
     $scope.showNewTeam = function() {
         $scope.clear();
         $scope.formTitle = "Add Team";
+        $scope.members = [];
     };
 
     $scope.editTeam = function(team) {
@@ -119,7 +122,7 @@
             MsgBox.show(msg, "success");
             $scope.clear();
             teamForm.modal("hide");
-
+            $scope.members = [];
             //any other business
             if (callback)
                 callback();

@@ -53,10 +53,35 @@
         }
         return false;
     };
+    
+    $scope.projectTeams = [];
+    $scope.addTeam = function (team) {
+        if (!team) {
+            MsgBox.notice("Please select team.");
+            return;
+        }
+        if (findMemberInList(team).length === 0) {
+            $scope.projectTeams.push(team);
+        } else {
+            MsgBox.notice(team.Name + " is already added to list.");
+        }
+    };
+
+    function findMemberInList(obj) {
+        var result = $scope.projectTeams.filter(function (n) {
+            return n.Id === obj.Id;
+        });
+        return result;
+    }
+
+    $scope.removeTeam = function (index) {
+        $scope.projectTeams.splice(index, 1);
+    };
 
     $scope.saveProject = function (newProject) {
         //retrieve the model from the client and extend the object with the defaults
         var theProject = OBJ.rectify(angular.copy(newProject), defaultObj);
+        //theProject.Teams = $scope.projectTeams;
 
         if (theProject["Id"] || theProject["Id"] !== "") {
             //this is an update
